@@ -18,3 +18,7 @@ l
 <src/main/java/co/edu/uptc/persistence/PersistencePrueba.java,9\5\9536902645fb25c4c3dce880c7db23d5640441fd
 d
 4src/main/java/co/edu/uptc/view/HelloApplication.java,1\9\19bf50d6e00e09c64901fd17942e525c89c13689
+^
+.src/main/java/co/edu/uptc/view/ViewPrueba.java,7\d\7df9f862d74f45d776ecdf72564b56d55c4a53b4
+N
+src/main/java/module-info.java,1\c\1c89a5491fbfda3fb050196d6a239f20200296e7
