@@ -18,7 +18,7 @@ public class Graph {
     public void addEdge(Node source, Node target, double weight) {
         Edge edge = new Edge(source, target, weight);
         adjacencyMap.putIfAbsent(source, new ArrayList<>());
-        adjacencyMap.putIfAbsent(target, new ArrayList<>()); 
+        adjacencyMap.putIfAbsent(target, new ArrayList<>());
         adjacencyMap.get(source).add(edge);
     }
 
@@ -30,6 +30,15 @@ public class Graph {
     // Obtener aristas salientes de un nodo
     public List<Edge> getEdgesFromNode(Node node) {
         return adjacencyMap.getOrDefault(node, Collections.emptyList());
+    }
+
+    // Obtener todas las aristas del grafo
+    public List<Edge> getEdges() {
+        List<Edge> edges = new ArrayList<>();
+        for (List<Edge> edgeList : adjacencyMap.values()) {
+            edges.addAll(edgeList);
+        }
+        return edges;
     }
 
     // Obtener vecinos de un nodo
@@ -51,4 +60,3 @@ public class Graph {
         return builder.toString();
     }
 }
-
