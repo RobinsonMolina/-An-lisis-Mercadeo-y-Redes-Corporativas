@@ -38,4 +38,4 @@ build/
 .DS_Store
 
 ### SonarLint ###
-/sonarlint/
+.idea/sonarlint/
