@@ -16,7 +16,7 @@ public class Node {
         return id;
     }
 
-    public String getname() {
+    public String getName() {
         return name;
     }
 
