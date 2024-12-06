@@ -3,12 +3,13 @@ package co.edu.uptc.view;
 import co.edu.uptc.model.entities.Graph;
 import co.edu.uptc.model.entities.Node;
 import co.edu.uptc.model.entities.Edge;
-import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
+import javafx.scene.control.ScrollPane;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,29 +23,26 @@ public class GraphView {
         graph = graphData; // Asignar el grafo a la variable estática
     }
 
-    // Método para obtener la escena del grafo (sin necesidad de heredar de
-    // Application)
-    public Scene getGraphScene() {
+    // Método para obtener un contenedor desplazable con el grafo
+    public ScrollPane getGraphContainer() {
         Pane pane = new Pane();
 
         Map<Node, Circle> nodeShapes = new HashMap<>();
         double width = 800;
         double height = 600;
+        double margin = 50;
 
         int nodeCount = graph.getNodes().size();
         Random random = new Random();
 
         // Dibujar nodos con posiciones aleatorias
         for (Node node : graph.getNodes()) {
-            // Usar arrays para permitir modificaciones dentro del while
             final double[] x = new double[1];
             final double[] y = new double[1];
 
-            // Generar posición aleatoria en el ancho y alto
             x[0] = random.nextInt((int) width);
             y[0] = random.nextInt((int) height);
 
-            // Asegurar que los nodos no se superpongan demasiado (opcional)
             while (nodeShapes.values().stream()
                     .anyMatch(circle -> Math.hypot(circle.getCenterX() - x[0], circle.getCenterY() - y[0]) < 30)) {
                 x[0] = random.nextInt((int) width);
@@ -78,6 +76,16 @@ public class GraphView {
                 pane.getChildren().addAll(line, weightLabel);
             }
         }
-        return new Scene(pane, width, height);
+
+        // Ajustar el tamaño del contenedor del grafo
+        pane.setMinSize(width + 2 * margin, height + 2 * margin);
+
+        // Envolver en un ScrollPane
+        ScrollPane scrollPane = new ScrollPane(pane);
+        scrollPane.setPannable(true); // Permitir que se pueda desplazar con arrastre
+        scrollPane.setFitToWidth(true); // Ajustar el tamaño horizontal si es necesario
+        scrollPane.setFitToHeight(true); // Ajustar el tamaño vertical si es necesario
+
+        return scrollPane;
     }
 }

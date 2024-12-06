@@ -33,7 +33,6 @@ public class Dashboard extends Application {
         graphController.addEdge("6", "1", 50.0);
         graphController.addEdge("2", "1", 50.0);
         graphController.addEdge("7", "6", 50.0);
-
     }
 
     @Override
@@ -54,15 +53,14 @@ public class Dashboard extends Application {
 
         // Dentro del método para mostrar el grafo
         viewGraph.setOnAction(e -> {
-            // Antes de crear la vista, aseguramos que el grafo está configurado
+            // Configurar el grafo en GraphView
             GraphView.setGraph(graphController.getGraph());
 
-            // Crear y mostrar la ventana con la escena del grafo
-            Stage graphStage = new Stage();
+            // Crear la vista del grafo
             GraphView graphView = new GraphView();
-            graphStage.setScene(graphView.getGraphScene()); // Pasar la escena del grafo
-            graphStage.setTitle("Visualización del Grafo");
-            graphStage.show();
+
+            // Configurar el centro del BorderPane con el contenedor desplazable
+            root.setCenter(graphView.getGraphContainer());
         });
 
         // Acción para salir
@@ -76,8 +74,6 @@ public class Dashboard extends Application {
     }
 
     public static void main(String[] args) {
-        // Crear el controlador del grafo
-        GraphController graphController = new GraphController();
         launch(args); // Llamamos a launch para iniciar la aplicación
     }
 }
