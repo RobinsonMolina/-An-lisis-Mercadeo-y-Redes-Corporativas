@@ -9,4 +9,6 @@ module co.edu.uptc.proyactoprogramacioniii {
     exports co.edu.uptc.model.entities;
 
     opens co.edu.uptc.view to javafx.fxml;
+    exports co.edu.uptc;
+    opens co.edu.uptc to javafx.fxml;
 }

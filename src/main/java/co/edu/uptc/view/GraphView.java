@@ -17,13 +17,12 @@ import java.util.Random;
 
 public class GraphView {
 
-    private static Graph graph; // Asegúrate de que el grafo estático esté disponible
+    private static Graph graph;
 
     public static void setGraph(Graph graphData) {
-        graph = graphData; // Asignar el grafo a la variable estática
+        graph = graphData;
     }
 
-    // Método para obtener un contenedor desplazable con el grafo
     public ScrollPane getGraphContainer() {
         Pane pane = new Pane();
 
@@ -35,7 +34,7 @@ public class GraphView {
         int nodeCount = graph.getNodes().size();
         Random random = new Random();
 
-        // Dibujar nodos con posiciones aleatorias
+        // Dibujar nodos
         for (Node node : graph.getNodes()) {
             final double[] x = new double[1];
             final double[] y = new double[1];
@@ -77,14 +76,12 @@ public class GraphView {
             }
         }
 
-        // Ajustar el tamaño del contenedor del grafo
         pane.setMinSize(width + 2 * margin, height + 2 * margin);
 
-        // Envolver en un ScrollPane
         ScrollPane scrollPane = new ScrollPane(pane);
-        scrollPane.setPannable(true); // Permitir que se pueda desplazar con arrastre
-        scrollPane.setFitToWidth(true); // Ajustar el tamaño horizontal si es necesario
-        scrollPane.setFitToHeight(true); // Ajustar el tamaño vertical si es necesario
+        scrollPane.setPannable(true);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setFitToHeight(true);
 
         return scrollPane;
     }

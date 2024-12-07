@@ -1,79 +1,149 @@
 package co.edu.uptc.view;
 
 import co.edu.uptc.controller.GraphController;
-import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 
-public class Dashboard extends Application {
+import java.io.File;
+
+public class Dashboard {
 
     private GraphController graphController;
+    private VBox option;
+    private VBox menu;
+    private HBox hIcon;
+    private BorderPane root;
+    private BorderPane principal;
 
-    public Dashboard() {
-        // Crear el controlador del grafo dentro del constructor
-        this.graphController = new GraphController();
-
-        // Añadir nodos y aristas de ejemplo
-        graphController.addNode("1", "Empresa1", "empresa");
-        graphController.addNode("2", "Cliente1", "cliente");
-        graphController.addEdge("1", "2", 100.0);
-        graphController.addNode("3", "Cliente2", "cliente");
-        graphController.addNode("4", "Cliente3", "cliente");
-        graphController.addNode("5", "Cliente4", "cliente");
-        graphController.addNode("6", "Cliente5", "cliente");
-        graphController.addNode("7", "Cliente6", "cliente");
-        graphController.addEdge("2", "1", 50.0);
-        graphController.addEdge("3", "1", 50.0);
-        graphController.addEdge("4", "1", 50.0);
-        graphController.addEdge("5", "1", 50.0);
-        graphController.addEdge("6", "1", 50.0);
-        graphController.addEdge("2", "1", 50.0);
-        graphController.addEdge("7", "6", 50.0);
+    public Dashboard(GraphController graphController) {
+        this.graphController = graphController;
     }
 
-    @Override
-    public void start(Stage primaryStage) {
-        // Vista principal de la aplicación
+    public Scene createScene() {
+        principal = new BorderPane();
+        menu = new VBox();
+        option = new VBox(10);
+        hIcon = new HBox();
+        root = new BorderPane();
+
+        createMenu();
+        createMenuToggleButton();
+
+        menu.getChildren().addAll(hIcon, option);
+
+        principal.setLeft(menu);
+        return new Scene(principal, 800, 600);
+    }
+
+    private VBox createMenu() {
+        option.setPadding(new Insets(10));
+        option.setStyle("-fx-background-color: #f0f0f0;");
+        option.setPrefWidth(200);
+
+        Label menuTitle = new Label("Menú");
+        menuTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+
+        Button createGraphButton = new Button("Crear grafo");
+        Button viewGraphButton = new Button("Ver grafo");
+        Button loadGraphButton = new Button("Cargar grafo");
+        Button centralidadButton = new Button("Centralidad");
+        Button comunityButton = new Button("Comunidades");
+        Button saleButton = new Button("Ventas");
+
+
+        createGraphButton.setOnAction(e -> showCreateGraphMenu());
+        viewGraphButton.setOnAction(e -> viewGraph());
+        loadGraphButton.setOnAction(e -> loadGraph());
+        centralidadButton.setOnAction(e -> centralidad());
+        comunityButton.setOnAction(e -> comunity());
+        saleButton.setOnAction(e -> sale());
+
+        option.getChildren().addAll(menuTitle, new Separator(), createGraphButton, viewGraphButton, loadGraphButton);
+        return option;
+    }
+
+    private HBox createMenuToggleButton() {
+        hIcon.setPadding(new Insets(5));
+        hIcon.setAlignment(Pos.CENTER_LEFT);
+
+        ImageView menuIcon = new ImageView(new Image("/Icon.png"));
+        menuIcon.setFitWidth(24);
+        menuIcon.setFitHeight(24);
+
+        menuIcon.setOnMouseClicked(e -> option.setVisible(!option.isVisible()));
+
+        hIcon.getChildren().add(menuIcon);
+        return hIcon;
+    }
+
+    private void showCreateGraphMenu() {
         BorderPane root = new BorderPane();
-        MenuBar menuBar = new MenuBar();
+        VBox createGraphArea = new VBox(10);
+        createGraphArea.setPadding(new Insets(20));
+        createGraphArea.setAlignment(Pos.TOP_CENTER);
 
-        // Menú principal
-        Menu menu = new Menu("Opciones");
-        MenuItem viewGraph = new MenuItem("Visualizar Grafo");
-        MenuItem exitApp = new MenuItem("Salir");
+        Label title = new Label("Opciones de creación");
+        title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
 
-        menu.getItems().addAll(viewGraph, exitApp);
-        menuBar.getMenus().add(menu);
+        Button addNodeButton = new Button("Añadir Nodo");
+        Button addEdgeButton = new Button("Añadir Arista");
+        Button removeNodeButton = new Button("Eliminar Nodo");
+        Button removeEdgeButton = new Button("Eliminar Arista");
+        Button updateNodeButton = new Button("Actualizar Nodo");
+        Button updateEdgeButton = new Button("Actualizar Arista");
 
-        root.setTop(menuBar);
+        createGraphArea.getChildren().addAll(
+                title,
+                addNodeButton,
+                addEdgeButton,
+                removeNodeButton,
+                removeEdgeButton,
+                updateNodeButton,
+                updateEdgeButton);
 
-        // Dentro del método para mostrar el grafo
-        viewGraph.setOnAction(e -> {
-            // Configurar el grafo en GraphView
-            GraphView.setGraph(graphController.getGraph());
-
-            // Crear la vista del grafo
-            GraphView graphView = new GraphView();
-
-            // Configurar el centro del BorderPane con el contenedor desplazable
-            root.setCenter(graphView.getGraphContainer());
-        });
-
-        // Acción para salir
-        exitApp.setOnAction(e -> primaryStage.close());
-
-        // Configuración de la escena
-        Scene scene = new Scene(root, 800, 600);
-        primaryStage.setTitle("Dashboard");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        root.setCenter(createGraphArea);
     }
 
-    public static void main(String[] args) {
-        launch(args); // Llamamos a launch para iniciar la aplicación
+    private void viewGraph() {
+        System.out.println("viewGraph");
+        BorderPane root = new BorderPane();
+        if (graphController.getGraph() != null && !graphController.getGraph().getNodes().isEmpty()) {
+            GraphView graphView = new GraphView();
+            graphView.setGraph(graphController.getGraph());
+            principal.setCenter(graphView.getGraphContainer());
+        } else {
+            Label noDataLabel = new Label("No hay datos en el grafo.");
+            noDataLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+            VBox noDataArea = new VBox(noDataLabel);
+            noDataArea.setAlignment(Pos.CENTER);
+            noDataArea.setPadding(new Insets(20));
+            principal.setCenter(noDataArea);
+        }
+    }
+
+    private void loadGraph() {
+
+    }
+
+    private void centralidad() {
+        // Vista para centralidad
+    }
+
+    private void comunity() {
+        // Vista para comunidades
+    }
+
+    private void sale() {
+        // Vista para los productos más vendidos
     }
 }

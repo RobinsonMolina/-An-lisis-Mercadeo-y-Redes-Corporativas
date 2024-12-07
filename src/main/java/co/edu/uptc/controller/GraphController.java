@@ -4,14 +4,23 @@ import co.edu.uptc.model.entities.Graph;
 import co.edu.uptc.model.entities.Node;
 
 public class GraphController {
+
+    private static GraphController instance; // Single instance of the class
     private Graph graph;
 
     public GraphController() {
         this.graph = new Graph();
     }
 
-    public void addNode(String id, String label, String type) {
-        Node node = new Node(id, label, type);
+    public static GraphController getInstance() {
+        if (instance == null) {
+            instance = new GraphController();
+        }
+        return instance;
+    }
+
+    public void addNode(String id, String name, String type) {
+        Node node = new Node(id, name, type);
         graph.addNode(node);
     }
 
@@ -29,7 +38,6 @@ public class GraphController {
     private Node findNodeById(String id) {
         return graph.getNodes().stream().filter(n -> n.getId().equals(id)).findFirst().orElse(null);
     }
-
     public Graph getGraph() {
         return graph;
     }
