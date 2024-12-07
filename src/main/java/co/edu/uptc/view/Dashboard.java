@@ -101,6 +101,13 @@ public class Dashboard {
         Button updateNodeButton = new Button("Actualizar Nodo");
         Button updateEdgeButton = new Button("Actualizar Arista");
 
+        addNodeButton.setOnAction(e -> addNode());
+        addEdgeButton.setOnAction(e -> addEdge());
+        removeNodeButton.setOnAction(e -> removeNode());
+        removeEdgeButton.setOnAction(e -> removeEdge());
+        updateNodeButton.setOnAction(e -> updateNode());
+        updateEdgeButton.setOnAction(e -> updateEdge());
+
         createGraphArea.getChildren().addAll(
                 title,
                 addNodeButton,
@@ -110,7 +117,7 @@ public class Dashboard {
                 updateNodeButton,
                 updateEdgeButton);
 
-        root.setCenter(createGraphArea);
+        principal.setCenter(createGraphArea);
     }
 
     private void viewGraph() {
@@ -152,6 +159,30 @@ public class Dashboard {
         loadGraphArea.setPadding(new Insets(20));
         root.setCenter(loadGraphArea);
         principal.setCenter(root);
+    }
+
+    public void addNode() {
+        // Vista para agregar nodo
+    }
+
+    public void addEdge() {
+        // Vista para agregar arista
+    }
+
+    public void removeNode() {
+        // Vista para eliminar nodo
+    }
+
+    public void removeEdge() {
+        // Vista para eliminar arista
+    }
+
+    public void updateNode() {
+        // Vista para actualizar nodo
+    }
+
+    public void updateEdge() {
+        // Vista para actualizar arista
     }
 
     private void centralidad() {
