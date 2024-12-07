@@ -168,8 +168,6 @@ public class Dashboard {
 
     public void addNode() {
     	System.out.println("Cargando la vista para agregar nodo...");
-
-        // Crear el BorderPane para la vista de agregar nodo
         BorderPane addNodePane = new BorderPane();
         VBox content = new VBox(10);
         content.setPadding(new Insets(20));
@@ -198,14 +196,43 @@ public class Dashboard {
 
         content.getChildren().addAll(title, idField, nameField, typeField, submitButton);
         addNodePane.setCenter(content);
-
-        // Establecer la vista en la posición central
         principal.setCenter(addNodePane);
     }
 
     public void addEdge() {
-    	
+    	System.out.println("Cargando la vista para agregar arista...");
+        BorderPane addEdgePane = new BorderPane();
+        VBox content = new VBox(10);
+        content.setPadding(new Insets(20));
+        content.setAlignment(Pos.CENTER);
+
+        Label title = new Label("Agregar Arista");
+        title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+
+        TextField sourceField = new TextField();
+        sourceField.setPromptText("ID nodo fuente");
+
+        TextField targetField = new TextField();
+        targetField.setPromptText("ID nodo destino");
+
+        TextField weightField = new TextField();
+        weightField.setPromptText("Peso de la arista");
+
+        Button submitButton = new Button("Agregar Arista");
+        submitButton.setOnAction(e -> {
+            String sourceId = sourceField.getText();
+            String targetId = targetField.getText();
+            String weightText = weightField.getText();
+
+         
+            
+        });
+
+        content.getChildren().addAll(title, sourceField, targetField, weightField, submitButton);
+        addEdgePane.setCenter(content);
+        principal.setCenter(addEdgePane);
     }
+
 
     public void removeNode() {
         // Vista para eliminar nodo
