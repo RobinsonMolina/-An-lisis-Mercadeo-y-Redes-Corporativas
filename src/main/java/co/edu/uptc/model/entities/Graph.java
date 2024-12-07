@@ -51,7 +51,16 @@ public class Graph {
         return neighbors;
     }
     
-    
+    public void removeEdge(Node source, Node target) {
+        if (adjacencyMap.containsKey(source)) {
+            List<Edge> edges = adjacencyMap.get(source);
+            edges.removeIf(edge -> edge.getTarget().equals(target));
+            System.out.println("Arista eliminada exitosamente.");
+        } else {
+            System.out.println("No se encontraron aristas para el nodo fuente.");
+        }
+    }
+
     
     
     

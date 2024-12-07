@@ -239,8 +239,36 @@ public class Dashboard {
     }
 
     public void removeEdge() {
-        
+        System.out.println("Cargando la vista para eliminar arista...");
+
+        BorderPane removeEdgePane = new BorderPane();
+        VBox content = new VBox(10);
+        content.setPadding(new Insets(20));
+        content.setAlignment(Pos.CENTER);
+
+        Label title = new Label("Eliminar Arista");
+        title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+
+        TextField sourceField = new TextField();
+        sourceField.setPromptText("ID nodo fuente");
+
+        TextField targetField = new TextField();
+        targetField.setPromptText("ID nodo destino");
+
+        Button submitButton = new Button("Eliminar Arista");
+        submitButton.setOnAction(e -> {
+            String sourceId = sourceField.getText();
+            String targetId = targetField.getText();
+
+            
+        });
+
+        content.getChildren().addAll(title, sourceField, targetField, submitButton);
+        removeEdgePane.setCenter(content);
+
+        principal.setCenter(removeEdgePane);
     }
+
 
 
     public void updateNode() {
