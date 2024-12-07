@@ -201,13 +201,11 @@ public class Dashboard {
 
         content.getChildren().addAll(title, idField, nameField, typeField, submitButton);
         addNodePane.setCenter(content);
-
         principal.setCenter(addNodePane);
     }
 
     public void addEdge() {
     	System.out.println("Cargando la vista para agregar arista...");
-
         BorderPane addEdgePane = new BorderPane();
         VBox content = new VBox(10);
         content.setPadding(new Insets(20));
@@ -294,6 +292,7 @@ public class Dashboard {
 
 
 
+
     public void updateNode() {
         // Vista para actualizar nodo
     }
@@ -351,7 +350,6 @@ public class Dashboard {
     }
 
 
-
     private void centralidad() {
         // Vista para centralidad
     }
@@ -371,5 +369,6 @@ public class Dashboard {
         alert.setContentText(message);
         alert.showAndWait();
     }
+    
     
 }
