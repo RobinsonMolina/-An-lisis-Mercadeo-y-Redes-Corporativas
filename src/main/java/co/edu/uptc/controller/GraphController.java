@@ -45,6 +45,8 @@ public class GraphController {
     public void loadGraphFromCSV(String filePath) {
         this.graph = manageFile.loadGraphFromCSV(filePath);
     }
+    
+    
 
     public Graph getGraph() {
         return graph;

@@ -4,6 +4,7 @@ import co.edu.uptc.controller.GraphController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
@@ -13,6 +14,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+
+import javafx.scene.control.TextField;
 
 import java.io.File;
 
@@ -75,7 +78,9 @@ public class Dashboard {
         hIcon.setPadding(new Insets(5));
         hIcon.setAlignment(Pos.CENTER_LEFT);
 
-        ImageView menuIcon = new ImageView(new Image("/Icon.png"));
+        
+        ImageView menuIcon = new ImageView(getClass().getResource("/Icon.png").toExternalForm());
+
         menuIcon.setFitWidth(24);
         menuIcon.setFitHeight(24);
 
@@ -162,11 +167,44 @@ public class Dashboard {
     }
 
     public void addNode() {
-        // Vista para agregar nodo
+    	System.out.println("Cargando la vista para agregar nodo...");
+
+        // Crear el BorderPane para la vista de agregar nodo
+        BorderPane addNodePane = new BorderPane();
+        VBox content = new VBox(10);
+        content.setPadding(new Insets(20));
+        content.setAlignment(Pos.CENTER);
+
+        Label title = new Label("Agregar Nodo");
+        title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+
+        TextField idField = new TextField();
+        idField.setPromptText("ID del nodo");
+
+        TextField nameField = new TextField();
+        nameField.setPromptText("Nombre del nodo");
+
+        TextField typeField = new TextField();
+        typeField.setPromptText("Tipo del nodo");
+
+        Button submitButton = new Button("Agregar Nodo");
+        submitButton.setOnAction(e -> {
+            String id = idField.getText();
+            String name = nameField.getText();
+            String type = typeField.getText();
+
+            
+        });
+
+        content.getChildren().addAll(title, idField, nameField, typeField, submitButton);
+        addNodePane.setCenter(content);
+
+        // Establecer la vista en la posición central
+        principal.setCenter(addNodePane);
     }
 
     public void addEdge() {
-        // Vista para agregar arista
+    	
     }
 
     public void removeNode() {
@@ -174,15 +212,16 @@ public class Dashboard {
     }
 
     public void removeEdge() {
-        // Vista para eliminar arista
+        
     }
+
 
     public void updateNode() {
         // Vista para actualizar nodo
     }
 
     public void updateEdge() {
-        // Vista para actualizar arista
+    	
     }
 
     private void centralidad() {
@@ -196,4 +235,6 @@ public class Dashboard {
     private void sale() {
         // Vista para los productos más vendidos
     }
+    
+    
 }

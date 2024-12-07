@@ -24,8 +24,15 @@ public class Edge {
     public double getWeight() {
         return weight;
     }
+    
+    
 
-    @Override
+    public void setWeight(double weight) {
+		this.weight = weight;
+	}
+
+
+	@Override
     public String toString() {
         return "Edge{source=" + source.getName() + ", target=" + target.getName() +
                ", weight=" + weight + "}";
