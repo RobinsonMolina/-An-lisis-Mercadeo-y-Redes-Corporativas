@@ -60,6 +60,19 @@ public class Graph {
             System.out.println("No se encontraron aristas para el nodo fuente.");
         }
     }
+    
+    public boolean updateEdge(Node source, Node target, double newWeight) {
+        if (adjacencyMap.containsKey(source)) {
+            List<Edge> edges = adjacencyMap.get(source);
+            for (Edge edge : edges) {
+                if (edge.getTarget().equals(target)) {
+                    edge.setWeight(newWeight);
+                    return true; 
+                }
+            }
+        }
+        return false; 
+    }
 
     
     

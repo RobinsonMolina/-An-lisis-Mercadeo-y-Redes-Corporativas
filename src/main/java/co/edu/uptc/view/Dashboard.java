@@ -276,8 +276,42 @@ public class Dashboard {
     }
 
     public void updateEdge() {
-    	
+    	System.out.println("Cargando la vista para actualizar arista...");
+
+        BorderPane updateEdgePane = new BorderPane();
+        VBox content = new VBox(10);
+        content.setPadding(new Insets(20));
+        content.setAlignment(Pos.CENTER);
+
+        Label title = new Label("Actualizar Arista");
+        title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+
+        TextField sourceField = new TextField();
+        sourceField.setPromptText("ID nodo fuente");
+
+        TextField targetField = new TextField();
+        targetField.setPromptText("ID nodo destino");
+
+        TextField weightField = new TextField();
+        weightField.setPromptText("Nuevo peso de la arista");
+
+        Button submitButton = new Button("Actualizar Arista");
+        submitButton.setOnAction(e -> {
+            String sourceId = sourceField.getText();
+            String targetId = targetField.getText();
+            String weightText = weightField.getText();
+
+            
+
+            
+        });
+
+        content.getChildren().addAll(title, sourceField, targetField, weightField, submitButton);
+        updateEdgePane.setCenter(content);
+
+        principal.setCenter(updateEdgePane);
     }
+
 
     private void centralidad() {
         // Vista para centralidad

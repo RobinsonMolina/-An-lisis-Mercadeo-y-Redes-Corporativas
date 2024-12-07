@@ -56,6 +56,17 @@ public class GraphController {
             System.out.println("Error: Nodo fuente o destino no encontrado.");
         }
     }
+    
+    public boolean updateEdge(String sourceId, String targetId, double newWeight) {
+        Node source = findNodeById(sourceId);
+        Node target = findNodeById(targetId);
+
+        if (source != null && target != null) {
+            return graph.updateEdge(source, target, newWeight);
+        }
+
+        return false;
+    }
 
 
     public Graph getGraph() {
