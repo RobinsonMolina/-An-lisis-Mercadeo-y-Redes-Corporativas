@@ -135,7 +135,6 @@ public class Dashboard {
         BorderPane root = new BorderPane();
         Label loadGraphLabel = new Label("Cargar Grafo");
         loadGraphLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
-
         Button loadButton = new Button("Seleccionar archivo");
         loadButton.setOnAction(e -> {
             FileChooser fileChooser = new FileChooser();
@@ -143,18 +142,15 @@ public class Dashboard {
             System.out.println("Antes de elegir el archivo");
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Archivos CSV", "*.csv"));
             File file = fileChooser.showOpenDialog(null);
-
             if (file != null) {
                 graphController.loadGraphFromCSV(file.getAbsolutePath());
                 viewGraph(); // Actualizar la vista con el grafo cargado
             }
         });
-
         VBox loadGraphArea = new VBox(10, loadGraphLabel, loadButton);
         loadGraphArea.setAlignment(Pos.CENTER);
         loadGraphArea.setPadding(new Insets(20));
         root.setCenter(loadGraphArea);
-
         principal.setCenter(root);
     }
 
