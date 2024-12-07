@@ -191,16 +191,23 @@ public class Dashboard {
             String name = nameField.getText();
             String type = typeField.getText();
 
-            
+            if (id.isEmpty() || name.isEmpty() || type.isEmpty()) {
+                showAlert(Alert.AlertType.ERROR, "Error", "Todos los campos deben ser completados.");
+            } else {
+                graphController.addNode(id, name, type);
+                showAlert(Alert.AlertType.INFORMATION, "Éxito", "Nodo agregado correctamente.");
+            }
         });
 
         content.getChildren().addAll(title, idField, nameField, typeField, submitButton);
         addNodePane.setCenter(content);
+
         principal.setCenter(addNodePane);
     }
 
     public void addEdge() {
     	System.out.println("Cargando la vista para agregar arista...");
+
         BorderPane addEdgePane = new BorderPane();
         VBox content = new VBox(10);
         content.setPadding(new Insets(20));
@@ -224,8 +231,18 @@ public class Dashboard {
             String targetId = targetField.getText();
             String weightText = weightField.getText();
 
-         
-            
+            if (sourceId.isEmpty() || targetId.isEmpty() || weightText.isEmpty()) {
+                showAlert(Alert.AlertType.ERROR, "Error", "Todos los campos deben ser completados.");
+                return;
+            }
+
+            try {
+                double weight = Double.parseDouble(weightText);
+                graphController.addEdge(sourceId, targetId, weight);
+                showAlert(Alert.AlertType.INFORMATION, "Éxito", "Arista agregada correctamente.");
+            } catch (NumberFormatException ex) {
+                showAlert(Alert.AlertType.ERROR, "Error", "El peso debe ser un número válido.");
+            }
         });
 
         content.getChildren().addAll(title, sourceField, targetField, weightField, submitButton);
@@ -260,7 +277,13 @@ public class Dashboard {
             String sourceId = sourceField.getText();
             String targetId = targetField.getText();
 
-            
+            if (sourceId.isEmpty() || targetId.isEmpty()) {
+                showAlert(Alert.AlertType.ERROR, "Error", "Todos los campos deben ser completados.");
+                return;
+            }
+
+            graphController.removeEdge(sourceId, targetId);
+            showAlert(Alert.AlertType.INFORMATION, "Éxito", "Arista eliminada correctamente.");
         });
 
         content.getChildren().addAll(title, sourceField, targetField, submitButton);
@@ -301,9 +324,24 @@ public class Dashboard {
             String targetId = targetField.getText();
             String weightText = weightField.getText();
 
-            
+            if (sourceId.isEmpty() || targetId.isEmpty() || weightText.isEmpty()) {
+                showAlert(Alert.AlertType.ERROR, "Error", "Todos los campos deben ser completados.");
+                return;
+            }
 
-            
+            try {
+                double newWeight = Double.parseDouble(weightText);
+
+                boolean result = graphController.updateEdge(sourceId, targetId, newWeight);
+
+                if (result) {
+                    showAlert(Alert.AlertType.INFORMATION, "Éxito", "Arista actualizada correctamente.");
+                } else {
+                    showAlert(Alert.AlertType.ERROR, "Error", "No se encontró la arista para actualizar.");
+                }
+            } catch (NumberFormatException ex) {
+                showAlert(Alert.AlertType.ERROR, "Error", "El peso debe ser un número válido.");
+            }
         });
 
         content.getChildren().addAll(title, sourceField, targetField, weightField, submitButton);
@@ -311,6 +349,7 @@ public class Dashboard {
 
         principal.setCenter(updateEdgePane);
     }
+
 
 
     private void centralidad() {
@@ -325,5 +364,12 @@ public class Dashboard {
         // Vista para los productos más vendidos
     }
     
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
     
 }
