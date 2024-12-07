@@ -1,0 +1,16 @@
+origen,destino,relacion,valor
+EmpresaA,Cliente1,Venta,500
+EmpresaA,EmpresaB,Colaboracion,300
+Cliente1,EmpresaC,Compra,200
+Cliente2,EmpresaB,Compra,100
+Cliente3,EmpresaG,Compra,100
+Cliente4,EmpresaE,Compra,100
+Cliente5,EmpresaB,Compra,100
+EmpresaA,EmpresaB,a,100
+EmpresaC,EmpresaD,a,200
+EmpresaE,EmpresaF,a,300
+EmpresaG,EmpresaH,a,400
+EmpresaA,Cliente1,b,3
+EmpresaB,Cliente4,b,4
+EmpresaC,Cliente5,b,5
+EmpresaD,Cliente1,b,6

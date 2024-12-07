@@ -60,7 +60,6 @@ public class Dashboard {
         Button comunityButton = new Button("Comunidades");
         Button saleButton = new Button("Ventas");
 
-
         createGraphButton.setOnAction(e -> showCreateGraphMenu());
         viewGraphButton.setOnAction(e -> viewGraph());
         loadGraphButton.setOnAction(e -> loadGraph());
@@ -132,7 +131,31 @@ public class Dashboard {
     }
 
     private void loadGraph() {
+        System.out.println("Entro al metodo");
+        BorderPane root = new BorderPane();
+        Label loadGraphLabel = new Label("Cargar Grafo");
+        loadGraphLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
 
+        Button loadButton = new Button("Seleccionar archivo");
+        loadButton.setOnAction(e -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Seleccionar archivo CSV");
+            System.out.println("Antes de elegir el archivo");
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Archivos CSV", "*.csv"));
+            File file = fileChooser.showOpenDialog(null);
+
+            if (file != null) {
+                graphController.loadGraphFromCSV(file.getAbsolutePath());
+                viewGraph(); // Actualizar la vista con el grafo cargado
+            }
+        });
+
+        VBox loadGraphArea = new VBox(10, loadGraphLabel, loadButton);
+        loadGraphArea.setAlignment(Pos.CENTER);
+        loadGraphArea.setPadding(new Insets(20));
+        root.setCenter(loadGraphArea);
+
+        principal.setCenter(root);
     }
 
     private void centralidad() {

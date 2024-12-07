@@ -2,14 +2,17 @@ package co.edu.uptc.controller;
 
 import co.edu.uptc.model.entities.Graph;
 import co.edu.uptc.model.entities.Node;
+import co.edu.uptc.persistence.ManageFile;
 
 public class GraphController {
 
     private static GraphController instance; // Single instance of the class
     private Graph graph;
+    private ManageFile manageFile;
 
     public GraphController() {
         this.graph = new Graph();
+        this.manageFile = new ManageFile();
     }
 
     public static GraphController getInstance() {
@@ -38,6 +41,11 @@ public class GraphController {
     private Node findNodeById(String id) {
         return graph.getNodes().stream().filter(n -> n.getId().equals(id)).findFirst().orElse(null);
     }
+
+    public void loadGraphFromCSV(String filePath) {
+        this.graph = manageFile.loadGraphFromCSV(filePath);
+    }
+
     public Graph getGraph() {
         return graph;
     }
