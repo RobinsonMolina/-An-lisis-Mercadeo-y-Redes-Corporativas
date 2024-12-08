@@ -78,7 +78,6 @@ public class Dashboard {
         hIcon.setPadding(new Insets(5));
         hIcon.setAlignment(Pos.CENTER_LEFT);
 
-        
         ImageView menuIcon = new ImageView(getClass().getResource("/Icon.png").toExternalForm());
 
         menuIcon.setFitWidth(24);
@@ -167,7 +166,7 @@ public class Dashboard {
     }
 
     public void addNode() {
-    	System.out.println("Cargando la vista para agregar nodo...");
+        System.out.println("Cargando la vista para agregar nodo...");
         BorderPane addNodePane = new BorderPane();
         VBox content = new VBox(10);
         content.setPadding(new Insets(20));
@@ -193,7 +192,12 @@ public class Dashboard {
 
             if (id.isEmpty() || name.isEmpty() || type.isEmpty()) {
                 showAlert(Alert.AlertType.ERROR, "Error", "Todos los campos deben ser completados.");
-            } else {
+            } else if (graphController.isNodeIdAlreadyRegistered(id)) {
+                showAlert(Alert.AlertType.ERROR, "Error", "El ID del nodo ya ha sido registrado.");
+            } else if (graphController.isNodeNameAlreadyRegistered(name)) {
+                showAlert(Alert.AlertType.ERROR, "Error", "El nombre del nodo ya ha sido registrado.");
+            } 
+            else {
                 graphController.addNode(id, name, type);
                 showAlert(Alert.AlertType.INFORMATION, "Éxito", "Nodo agregado correctamente.");
             }
@@ -204,8 +208,9 @@ public class Dashboard {
         principal.setCenter(addNodePane);
     }
 
+
     public void addEdge() {
-    	System.out.println("Cargando la vista para agregar arista...");
+        System.out.println("Cargando la vista para agregar arista...");
         BorderPane addEdgePane = new BorderPane();
         VBox content = new VBox(10);
         content.setPadding(new Insets(20));
@@ -232,6 +237,9 @@ public class Dashboard {
             if (sourceId.isEmpty() || targetId.isEmpty() || weightText.isEmpty()) {
                 showAlert(Alert.AlertType.ERROR, "Error", "Todos los campos deben ser completados.");
                 return;
+            }if (sourceId.equalsIgnoreCase(targetId)) {
+                showAlert(Alert.AlertType.ERROR, "Error", "No se puede crear una relacion con la misma entidad");
+                return;
             }
 
             try {
@@ -248,9 +256,39 @@ public class Dashboard {
         principal.setCenter(addEdgePane);
     }
 
-
     public void removeNode() {
-        // Vista para eliminar nodo
+        BorderPane removeNodePane = new BorderPane();
+        VBox content = new VBox(10);
+        content.setPadding(new Insets(20));
+        content.setAlignment(Pos.CENTER);
+
+        Label title = new Label("Eliminar Nodo");
+        title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+
+        TextField idField = new TextField();
+        idField.setPromptText("ID del nodo a eliminar");
+
+        Button submitButton = new Button("Eliminar Nodo");
+        submitButton.setOnAction(e -> {
+            String nodeId = idField.getText();
+
+            if (nodeId.isEmpty()) {
+                showAlert(Alert.AlertType.ERROR, "Error", "El ID del nodo no puede estar vacío.");
+                return;
+            }
+
+            boolean result = graphController.removeNode(nodeId);
+
+            if (result) {
+                showAlert(Alert.AlertType.INFORMATION, "Éxito", "Nodo eliminado correctamente.");
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Error", "No se encontró el nodo con el ID especificado.");
+            }
+        });
+
+        content.getChildren().addAll(title, idField, submitButton);
+        removeNodePane.setCenter(content);
+        principal.setCenter(removeNodePane);
     }
 
     public void removeEdge() {
@@ -278,6 +316,15 @@ public class Dashboard {
             if (sourceId.isEmpty() || targetId.isEmpty()) {
                 showAlert(Alert.AlertType.ERROR, "Error", "Todos los campos deben ser completados.");
                 return;
+            }else if (sourceId.equalsIgnoreCase(targetId)) {
+                showAlert(Alert.AlertType.ERROR, "Error", "Los ID son los mismos.");
+                return;
+            }else if (!graphController.isNodeIdAlreadyRegistered(sourceId)) {
+                showAlert(Alert.AlertType.ERROR, "Error", "El nodo fuente no existe.");
+                return;
+            }else if (!graphController.isNodeIdAlreadyRegistered(targetId)) {
+                showAlert(Alert.AlertType.ERROR, "Error", "El nodo destino no existe.");
+                return;
             }
 
             graphController.removeEdge(sourceId, targetId);
@@ -290,15 +337,51 @@ public class Dashboard {
         principal.setCenter(removeEdgePane);
     }
 
-
-
-
     public void updateNode() {
-        // Vista para actualizar nodo
+        BorderPane updateNodePane = new BorderPane();
+        VBox content = new VBox(10);
+        content.setPadding(new Insets(20));
+        content.setAlignment(Pos.CENTER);
+
+        Label title = new Label("Actualizar Nodo");
+        title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+
+        TextField idField = new TextField();
+        idField.setPromptText("ID del nodo a actualizar");
+
+        TextField nameField = new TextField();
+        nameField.setPromptText("Nuevo nombre del nodo");
+
+        TextField typeField = new TextField();
+        typeField.setPromptText("Nuevo tipo del nodo");
+
+        Button submitButton = new Button("Actualizar Nodo");
+        submitButton.setOnAction(e -> {
+            String nodeId = idField.getText();
+            String name = nameField.getText();
+            String type = typeField.getText();
+
+            if (nodeId.isEmpty() || name.isEmpty() || type.isEmpty()) {
+                showAlert(Alert.AlertType.ERROR, "Error", "Todos los campos deben ser completados.");
+                return;
+            }
+
+            boolean result = graphController.updateNode(nodeId, name, type);
+
+            if (result) {
+                showAlert(Alert.AlertType.INFORMATION, "Éxito", "Nodo actualizado correctamente.");
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Error", "No se encontró el nodo con el ID especificado.");
+            }
+        });
+
+        content.getChildren().addAll(title, idField, nameField, typeField, submitButton);
+        updateNodePane.setCenter(content);
+        principal.setCenter(updateNodePane);
     }
 
     public void updateEdge() {
-    	System.out.println("Cargando la vista para actualizar arista...");
+        System.out.println("Cargando la vista para actualizar arista...");
 
         BorderPane updateEdgePane = new BorderPane();
         VBox content = new VBox(10);
@@ -349,7 +432,6 @@ public class Dashboard {
         principal.setCenter(updateEdgePane);
     }
 
-
     private void centralidad() {
         // Vista para centralidad
     }
@@ -361,7 +443,7 @@ public class Dashboard {
     private void sale() {
         // Vista para los productos más vendidos
     }
-    
+
     private void showAlert(Alert.AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
@@ -369,6 +451,5 @@ public class Dashboard {
         alert.setContentText(message);
         alert.showAndWait();
     }
-    
-    
+
 }

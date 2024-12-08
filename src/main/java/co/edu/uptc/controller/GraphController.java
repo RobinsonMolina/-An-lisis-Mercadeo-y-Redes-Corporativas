@@ -21,42 +21,96 @@ public class GraphController {
         }
         return instance;
     }
+    
+    
 
     public void addNode(String id, String name, String type) {
         Node node = new Node(id, name, type);
         graph.addNode(node);
+        
     }
 
     public void addEdge(String sourceId, String targetId, double weight) {
+        if (!verifyIdNode(sourceId, targetId)) {
+            System.out.println("Error: Nodo fuente o destino no válido.");
+            return;
+        }
+        
         Node source = findNodeById(sourceId);
         Node target = findNodeById(targetId);
 
         if (source != null && target != null) {
             graph.addEdge(source, target, weight);
+            
         } else {
             System.out.println("Error: Nodo fuente o destino no encontrado.");
         }
     }
 
+    private boolean verifyIdNode(String sourceId, String targetId) {
+        return isNodePresentById(sourceId) && isNodePresentById(targetId);
+    }
+
+    private boolean isNodePresentById(String id) {
+        return graph.getNodes().stream().anyMatch(n -> n.getId().equals(id));
+    }
+
+    public boolean isNodeIdAlreadyRegistered(String id) {
+        return isNodePresentById(id);
+    }
+    
+    private boolean isNodePresentByName(String name) {
+        return graph.getNodes().stream().anyMatch(n -> n.getName().equals(name));
+    }
+
+    public boolean isNodeNameAlreadyRegistered(String name) {
+        return isNodePresentByName(name);
+    }
+
+
     private Node findNodeById(String id) {
         return graph.getNodes().stream().filter(n -> n.getId().equals(id)).findFirst().orElse(null);
     }
+    
+   
 
     public void loadGraphFromCSV(String filePath) {
         this.graph = manageFile.loadGraphFromCSV(filePath);
     }
-    
+
+    public boolean removeNode(String nodeId) {
+        Node node = findNodeById(nodeId);
+        if (node != null) {
+            graph.removeNode(node);
+            
+            return true;
+        }
+        return false;
+    }
+
     public void removeEdge(String sourceId, String targetId) {
         Node source = findNodeById(sourceId);
         Node target = findNodeById(targetId);
 
         if (source != null && target != null) {
             graph.removeEdge(source, target);
+            
         } else {
             System.out.println("Error: Nodo fuente o destino no encontrado.");
         }
     }
-    
+
+    public boolean updateNode(String nodeId, String newName, String newType) {
+        Node node = findNodeById(nodeId);
+        if (node != null) {
+            graph.updateNode(node, newName, newType);
+            System.out.println("Nodo actualizado exitosamente.");
+            return true;
+        }
+        System.out.println("Error: Nodo no encontrado.");
+        return false;
+    }
+
     public boolean updateEdge(String sourceId, String targetId, double newWeight) {
         Node source = findNodeById(sourceId);
         Node target = findNodeById(targetId);
@@ -67,7 +121,6 @@ public class GraphController {
 
         return false;
     }
-
 
     public Graph getGraph() {
         return graph;
