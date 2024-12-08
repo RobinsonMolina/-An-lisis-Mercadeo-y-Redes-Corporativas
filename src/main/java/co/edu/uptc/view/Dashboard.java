@@ -446,17 +446,7 @@ public class Dashboard {
         GraphView graphView = new GraphView();
         graphView.setGraph(graphController.getGraph());
 
-        // Contenedor principal
-        Pane mainPane = new Pane();
-
-        // Agregar grafo de comunidades
-        ScrollPane communityGraphPane = graphView.getCommunityGraphContainer(nodeColors);
-        communityGraphPane.setLayoutX(0); // Ajusta la posición si es necesario
-        communityGraphPane.setLayoutY(0);
-        communityGraphPane.setPrefSize(800, 600);
-
-        mainPane.getChildren().add(communityGraphPane); // Solo se agrega el grafo de comunidades
-        principal.setCenter(mainPane);
+        principal.setCenter(graphView.getGraphCommunity(nodeColors));
     }
 
     private void sale() {
