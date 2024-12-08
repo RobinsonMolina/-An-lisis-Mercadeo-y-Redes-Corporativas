@@ -320,7 +320,46 @@ public class Dashboard {
     }
 
     public void updateNode() {
-        // Vista para actualizar nodo
+        BorderPane updateNodePane = new BorderPane();
+        VBox content = new VBox(10);
+        content.setPadding(new Insets(20));
+        content.setAlignment(Pos.CENTER);
+
+        Label title = new Label("Actualizar Nodo");
+        title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+
+        TextField idField = new TextField();
+        idField.setPromptText("ID del nodo a actualizar");
+
+        TextField nameField = new TextField();
+        nameField.setPromptText("Nuevo nombre del nodo");
+
+        TextField typeField = new TextField();
+        typeField.setPromptText("Nuevo tipo del nodo");
+
+        Button submitButton = new Button("Actualizar Nodo");
+        submitButton.setOnAction(e -> {
+            String nodeId = idField.getText();
+            String name = nameField.getText();
+            String type = typeField.getText();
+
+            if (nodeId.isEmpty() || name.isEmpty() || type.isEmpty()) {
+                showAlert(Alert.AlertType.ERROR, "Error", "Todos los campos deben ser completados.");
+                return;
+            }
+
+            boolean result = graphController.updateNode(nodeId, name, type);
+
+            if (result) {
+                showAlert(Alert.AlertType.INFORMATION, "Éxito", "Nodo actualizado correctamente.");
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Error", "No se encontró el nodo con el ID especificado.");
+            }
+        });
+
+        content.getChildren().addAll(title, idField, nameField, typeField, submitButton);
+        updateNodePane.setCenter(content);
+        principal.setCenter(updateNodePane);
     }
 
     public void updateEdge() {

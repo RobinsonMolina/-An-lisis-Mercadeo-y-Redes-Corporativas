@@ -72,10 +72,9 @@ public class GraphController {
             graph.updateNode(node, newName, newType);
             System.out.println("Nodo actualizado exitosamente.");
             return true;
-        } else {
-            System.out.println("Error: Nodo no encontrado.");
-            return false;
         }
+        System.out.println("Error: Nodo no encontrado.");
+        return false;
     }
 
     public boolean updateEdge(String sourceId, String targetId, double newWeight) {
