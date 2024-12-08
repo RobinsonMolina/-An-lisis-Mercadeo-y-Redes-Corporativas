@@ -45,7 +45,17 @@ public class GraphController {
     public void loadGraphFromCSV(String filePath) {
         this.graph = manageFile.loadGraphFromCSV(filePath);
     }
-    
+
+    public void removeNode(String nodeId) {
+        Node node = findNodeById(nodeId);
+        if (node != null) {
+            graph.removeNode(node);
+            System.out.println("Nodo eliminado exitosamente.");
+        } else {
+            System.out.println("Error: Nodo no encontrado.");
+        }
+    }
+
     public void removeEdge(String sourceId, String targetId) {
         Node source = findNodeById(sourceId);
         Node target = findNodeById(targetId);
@@ -56,7 +66,7 @@ public class GraphController {
             System.out.println("Error: Nodo fuente o destino no encontrado.");
         }
     }
-    
+
     public boolean updateEdge(String sourceId, String targetId, double newWeight) {
         Node source = findNodeById(sourceId);
         Node target = findNodeById(targetId);
@@ -67,7 +77,6 @@ public class GraphController {
 
         return false;
     }
-
 
     public Graph getGraph() {
         return graph;
