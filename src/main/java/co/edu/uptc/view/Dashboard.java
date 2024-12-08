@@ -1,23 +1,33 @@
 package co.edu.uptc.view;
 
 import co.edu.uptc.controller.GraphController;
+import co.edu.uptc.model.entities.Node;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 
 import javafx.scene.control.TextField;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 
 public class Dashboard {
 
@@ -70,7 +80,8 @@ public class Dashboard {
         comunityButton.setOnAction(e -> comunity());
         saleButton.setOnAction(e -> sale());
 
-        option.getChildren().addAll(menuTitle, new Separator(), createGraphButton, viewGraphButton, loadGraphButton);
+        option.getChildren().addAll(menuTitle, new Separator(), createGraphButton, viewGraphButton, loadGraphButton,
+                centralidadButton, comunityButton, saleButton);
         return option;
     }
 
@@ -419,7 +430,33 @@ public class Dashboard {
     }
 
     private void comunity() {
-        // Vista para comunidades
+        List<Set<Node>> communities = graphController.detectCommunities();
+        Map<Node, Color> nodeColors = new HashMap<>();
+        Random rand = new Random();
+
+        // Asignar colores únicos a cada comunidad
+        for (Set<Node> community : communities) {
+            Color color = Color.rgb(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256));
+            for (Node node : community) {
+                nodeColors.put(node, color);
+            }
+        }
+
+        // Crear vista con el grafo de comunidades
+        GraphView graphView = new GraphView();
+        graphView.setGraph(graphController.getGraph());
+
+        // Contenedor principal
+        Pane mainPane = new Pane();
+
+        // Agregar grafo de comunidades
+        ScrollPane communityGraphPane = graphView.getCommunityGraphContainer(nodeColors);
+        communityGraphPane.setLayoutX(0); // Ajusta la posición si es necesario
+        communityGraphPane.setLayoutY(0);
+        communityGraphPane.setPrefSize(800, 600);
+
+        mainPane.getChildren().add(communityGraphPane); // Solo se agrega el grafo de comunidades
+        principal.setCenter(mainPane);
     }
 
     private void sale() {

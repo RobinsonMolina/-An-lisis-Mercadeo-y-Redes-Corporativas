@@ -1,5 +1,14 @@
 package co.edu.uptc.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
+
 import co.edu.uptc.model.entities.Graph;
 import co.edu.uptc.model.entities.Node;
 import co.edu.uptc.persistence.ManageFile;
@@ -90,5 +99,44 @@ public class GraphController {
 
     public Graph getGraph() {
         return graph;
+    }
+
+    public List<Set<Node>> detectCommunities() {
+        Map<Node, Integer> communityMap = new HashMap<>();
+        int communityId = 0;
+
+        for (Node node : graph.getNodes()) {
+            if (!communityMap.containsKey(node)) {
+                Set<Node> community = new HashSet<>();
+                exploreCommunity(node, community, communityMap, communityId++);
+            }
+        }
+
+        // Agrupar comunidades
+        Map<Integer, Set<Node>> communities = new HashMap<>();
+        for (Map.Entry<Node, Integer> entry : communityMap.entrySet()) {
+            communities.computeIfAbsent(entry.getValue(), k -> new HashSet<>()).add(entry.getKey());
+        }
+
+        return new ArrayList<>(communities.values());
+    }
+
+    private void exploreCommunity(Node node, Set<Node> community, Map<Node, Integer> communityMap, int communityId) {
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(node);
+
+        while (!queue.isEmpty()) {
+            Node current = queue.poll();
+            if (!communityMap.containsKey(current)) {
+                community.add(current);
+                communityMap.put(current, communityId);
+
+                for (Node neighbor : graph.getNeighbors(current)) {
+                    if (!communityMap.containsKey(neighbor)) {
+                        queue.add(neighbor);
+                    }
+                }
+            }
+        }
     }
 }
