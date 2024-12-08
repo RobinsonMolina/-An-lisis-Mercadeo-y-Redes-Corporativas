@@ -66,6 +66,18 @@ public class GraphController {
         }
     }
 
+    public boolean updateNode(String nodeId, String newName, String newType) {
+        Node node = findNodeById(nodeId);
+        if (node != null) {
+            graph.updateNode(node, newName, newType);
+            System.out.println("Nodo actualizado exitosamente.");
+            return true;
+        } else {
+            System.out.println("Error: Nodo no encontrado.");
+            return false;
+        }
+    }
+
     public boolean updateEdge(String sourceId, String targetId, double newWeight) {
         Node source = findNodeById(sourceId);
         Node target = findNodeById(targetId);
