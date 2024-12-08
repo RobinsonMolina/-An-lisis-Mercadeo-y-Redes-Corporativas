@@ -2,11 +2,14 @@ package co.edu.uptc.controller;
 
 import co.edu.uptc.model.entities.Graph;
 import co.edu.uptc.model.entities.Node;
+import co.edu.uptc.model.entities.Edge;
 import co.edu.uptc.persistence.ManageFile;
+
+import java.util.*;
 
 public class GraphController {
 
-    private static GraphController instance; // Single instance of the class
+    private static GraphController instance;
     private Graph graph;
     private ManageFile manageFile;
 
@@ -49,4 +52,5 @@ public class GraphController {
     public Graph getGraph() {
         return graph;
     }
+
 }

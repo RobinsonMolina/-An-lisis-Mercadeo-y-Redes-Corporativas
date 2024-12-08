@@ -1,6 +1,9 @@
 package co.edu.uptc.view;
 
+import co.edu.uptc.controller.CommunityDetection;
 import co.edu.uptc.controller.GraphController;
+import co.edu.uptc.model.entities.Graph;
+import co.edu.uptc.model.entities.Node;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -15,6 +18,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 
 import java.io.File;
+import java.util.List;
+import java.util.Map;
 
 public class Dashboard {
 
@@ -114,11 +119,15 @@ public class Dashboard {
     }
 
     private void viewGraph() {
-        System.out.println("viewGraph");
-        BorderPane root = new BorderPane();
         if (graphController.getGraph() != null && !graphController.getGraph().getNodes().isEmpty()) {
+            Graph graph = graphController.getGraph();
+
+            CommunityDetection communityDetection = new CommunityDetection();
+            Map<Integer, List<Node>> communities = communityDetection.detectCommunitiesBySimilarity(graph);
+            graph.setCommunities(communities);
+            GraphView.setCommunities(communities);
             GraphView graphView = new GraphView();
-            graphView.setGraph(graphController.getGraph());
+            GraphView.setGraph(graph);
             principal.setCenter(graphView.getGraphContainer());
         } else {
             Label noDataLabel = new Label("No hay datos en el grafo.");
@@ -129,6 +138,9 @@ public class Dashboard {
             principal.setCenter(noDataArea);
         }
     }
+
+
+
 
     private void loadGraph() {
         System.out.println("Entro al metodo");
@@ -144,7 +156,7 @@ public class Dashboard {
             File file = fileChooser.showOpenDialog(null);
             if (file != null) {
                 graphController.loadGraphFromCSV(file.getAbsolutePath());
-                viewGraph(); // Actualizar la vista con el grafo cargado
+                viewGraph();
             }
         });
         VBox loadGraphArea = new VBox(10, loadGraphLabel, loadButton);

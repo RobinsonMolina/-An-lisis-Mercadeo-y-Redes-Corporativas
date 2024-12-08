@@ -4,17 +4,16 @@ import java.util.*;
 
 public class Graph {
     private Map<Node, List<Edge>> adjacencyMap;
+    private Map<Integer, List<Node>> communities;
 
     public Graph() {
         this.adjacencyMap = new HashMap<>();
     }
 
-    // Agregar un nodo al grafo
     public void addNode(Node node) {
         adjacencyMap.putIfAbsent(node, new ArrayList<>());
     }
 
-    // Agregar una arista al grafo
     public void addEdge(Node source, Node target, double weight) {
         Edge edge = new Edge(source, target, weight);
         adjacencyMap.putIfAbsent(source, new ArrayList<>());
@@ -22,17 +21,14 @@ public class Graph {
         adjacencyMap.get(source).add(edge);
     }
 
-    // Obtener nodos
     public Set<Node> getNodes() {
         return adjacencyMap.keySet();
     }
 
-    // Obtener aristas salientes de un nodo
     public List<Edge> getEdgesFromNode(Node node) {
         return adjacencyMap.getOrDefault(node, Collections.emptyList());
     }
 
-    // Obtener todas las aristas del grafo
     public List<Edge> getEdges() {
         List<Edge> edges = new ArrayList<>();
         for (List<Edge> edgeList : adjacencyMap.values()) {
@@ -41,7 +37,7 @@ public class Graph {
         return edges;
     }
 
-    // Obtener vecinos de un nodo
+
     public List<Node> getNeighbors(Node node) {
         List<Node> neighbors = new ArrayList<>();
         List<Edge> edges = adjacencyMap.getOrDefault(node, Collections.emptyList());
@@ -58,5 +54,12 @@ public class Graph {
             builder.append(node).append(" -> ").append(adjacencyMap.get(node)).append("\n");
         }
         return builder.toString();
+    }
+    public void setCommunities(Map<Integer, List<Node>> communities) {
+        this.communities = communities;
+    }
+
+    public Map<Integer, List<Node>> getCommunities() {
+        return communities;
     }
 }
