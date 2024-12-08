@@ -50,7 +50,19 @@ public class Graph {
         }
         return neighbors;
     }
-    
+
+    public void removeNode(Node node) {
+        if (adjacencyMap.containsKey(node)) {
+            // Remover todas las aristas hacia el nodo
+            adjacencyMap.values().forEach(edges -> edges.removeIf(edge -> edge.getTarget().equals(node)));
+            // Remover el nodo del mapa de adyacencia
+            adjacencyMap.remove(node);
+            System.out.println("Nodo eliminado exitosamente.");
+        } else {
+            System.out.println("Error: Nodo no encontrado en el grafo.");
+        }
+    }
+
     public void removeEdge(Node source, Node target) {
         if (adjacencyMap.containsKey(source)) {
             List<Edge> edges = adjacencyMap.get(source);
@@ -60,23 +72,19 @@ public class Graph {
             System.out.println("No se encontraron aristas para el nodo fuente.");
         }
     }
-    
+
     public boolean updateEdge(Node source, Node target, double newWeight) {
         if (adjacencyMap.containsKey(source)) {
             List<Edge> edges = adjacencyMap.get(source);
             for (Edge edge : edges) {
                 if (edge.getTarget().equals(target)) {
                     edge.setWeight(newWeight);
-                    return true; 
+                    return true;
                 }
             }
         }
-        return false; 
+        return false;
     }
-
-    
-    
-    
 
     @Override
     public String toString() {
