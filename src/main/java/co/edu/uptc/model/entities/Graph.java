@@ -73,6 +73,11 @@ public class Graph {
         }
     }
 
+    public void updateNode(Node node, String newName, String newType) {
+        node.setName(newName);
+        node.setType(newType);
+    }
+
     public boolean updateEdge(Node source, Node target, double newWeight) {
         if (adjacencyMap.containsKey(source)) {
             List<Edge> edges = adjacencyMap.get(source);
