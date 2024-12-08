@@ -4,12 +4,14 @@ public class Edge {
     private Node source; 
     private Node target;
     private double weight; 
+    private boolean isDeleted;
 
 
     public Edge(Node source, Node target, double weight) {
         this.source = source;
         this.target = target;
         this.weight = weight;
+        this.isDeleted = isDeleted;
     }
 
 
@@ -29,6 +31,15 @@ public class Edge {
 
     public void setWeight(double weight) {
 		this.weight = weight;
+	}
+    
+	public boolean isDeleted() {
+		return isDeleted;
+	}
+
+
+	public void setDeleted(boolean isDelete) {
+		this.isDeleted = isDelete;
 	}
 
 

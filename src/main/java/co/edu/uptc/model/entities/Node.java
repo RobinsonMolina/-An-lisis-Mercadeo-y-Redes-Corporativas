@@ -5,13 +5,15 @@ public class Node {
     private String id;
     private String name;
     private String type;
-
+    private boolean deleted;
+    
     public Node(String id, String name, String type) {
         this.id = id;
         this.name = name;
         this.type = type;
+        this.deleted=false;
     }
-
+   
     public String getId() {
         return id;
     }
@@ -34,6 +36,14 @@ public class Node {
 
     public void setType(String type) {
         this.type = type;
+    }
+    
+    public boolean isDeleted() {
+        return deleted;
+    }
+    
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
     @Override

@@ -22,12 +22,15 @@ public class GraphController {
         return instance;
     }
     
-    
+    private void saveGraph() {
+        String resourcePath = "src/main/resources/grafoCreado.csv"; 
+        manageFile.saveGraphToCSV(graph, resourcePath);
+    }
 
     public void addNode(String id, String name, String type) {
         Node node = new Node(id, name, type);
         graph.addNode(node);
-        
+        saveGraph();
     }
 
     public void addEdge(String sourceId, String targetId, double weight) {
@@ -41,7 +44,7 @@ public class GraphController {
 
         if (source != null && target != null) {
             graph.addEdge(source, target, weight);
-            
+            saveGraph();
         } else {
             System.out.println("Error: Nodo fuente o destino no encontrado.");
         }
@@ -82,7 +85,7 @@ public class GraphController {
         Node node = findNodeById(nodeId);
         if (node != null) {
             graph.removeNode(node);
-            
+            saveGraph();
             return true;
         }
         return false;
@@ -94,7 +97,7 @@ public class GraphController {
 
         if (source != null && target != null) {
             graph.removeEdge(source, target);
-            
+            saveGraph();
         } else {
             System.out.println("Error: Nodo fuente o destino no encontrado.");
         }

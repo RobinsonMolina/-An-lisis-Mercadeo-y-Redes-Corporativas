@@ -1,10 +1,12 @@
 package co.edu.uptc.persistence;
 
+import co.edu.uptc.model.entities.Edge;
 import co.edu.uptc.model.entities.Graph;
 import co.edu.uptc.model.entities.Node;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 
 public class ManageFile {
@@ -39,5 +41,26 @@ public class ManageFile {
         }
 
         return graph;
+    }
+    
+    public void saveGraphToCSV(Graph graph, String filePath) {
+        try (FileWriter writer = new FileWriter(filePath)) {
+            // Escribe la cabecera
+            writer.append("Origen,Destino,Peso,Estado\n");
+
+            // Escribe las aristas
+            for (Edge edge : graph.getEdges()) {
+                String source = edge.getSource().getId();
+                String target = edge.getTarget().getId();
+                double weight = edge.getWeight();
+                String status = edge.isDeleted() ? "Eliminado" : "Persistente";
+
+                writer.append(String.format("%s,%s,%.2f,%s\n", source, target, weight, status));
+            }
+
+            System.out.println("Grafo guardado exitosamente en " + filePath);
+        } catch (IOException e) {
+            System.out.println("Error al guardar el archivo CSV: " + e.getMessage());
+        }
     }
 }
