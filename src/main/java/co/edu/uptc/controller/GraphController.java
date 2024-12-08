@@ -46,14 +46,13 @@ public class GraphController {
         this.graph = manageFile.loadGraphFromCSV(filePath);
     }
 
-    public void removeNode(String nodeId) {
+    public boolean removeNode(String nodeId) {
         Node node = findNodeById(nodeId);
         if (node != null) {
             graph.removeNode(node);
-            System.out.println("Nodo eliminado exitosamente.");
-        } else {
-            System.out.println("Error: Nodo no encontrado.");
+            return true;
         }
+        return false;
     }
 
     public void removeEdge(String sourceId, String targetId) {
