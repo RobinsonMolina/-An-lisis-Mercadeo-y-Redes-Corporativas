@@ -192,7 +192,12 @@ public class Dashboard {
 
             if (id.isEmpty() || name.isEmpty() || type.isEmpty()) {
                 showAlert(Alert.AlertType.ERROR, "Error", "Todos los campos deben ser completados.");
-            } else {
+            } else if (graphController.isNodeIdAlreadyRegistered(id)) {
+                showAlert(Alert.AlertType.ERROR, "Error", "El ID del nodo ya ha sido registrado.");
+            } else if (graphController.isNodeNameAlreadyRegistered(name)) {
+                showAlert(Alert.AlertType.ERROR, "Error", "El nombre del nodo ya ha sido registrado.");
+            } 
+            else {
                 graphController.addNode(id, name, type);
                 showAlert(Alert.AlertType.INFORMATION, "Éxito", "Nodo agregado correctamente.");
             }
@@ -202,6 +207,7 @@ public class Dashboard {
         addNodePane.setCenter(content);
         principal.setCenter(addNodePane);
     }
+
 
     public void addEdge() {
         System.out.println("Cargando la vista para agregar arista...");
@@ -230,6 +236,9 @@ public class Dashboard {
 
             if (sourceId.isEmpty() || targetId.isEmpty() || weightText.isEmpty()) {
                 showAlert(Alert.AlertType.ERROR, "Error", "Todos los campos deben ser completados.");
+                return;
+            }if (sourceId.equalsIgnoreCase(targetId)) {
+                showAlert(Alert.AlertType.ERROR, "Error", "No se puede crear una relacion con la misma entidad");
                 return;
             }
 
@@ -306,6 +315,15 @@ public class Dashboard {
 
             if (sourceId.isEmpty() || targetId.isEmpty()) {
                 showAlert(Alert.AlertType.ERROR, "Error", "Todos los campos deben ser completados.");
+                return;
+            }else if (sourceId.equalsIgnoreCase(targetId)) {
+                showAlert(Alert.AlertType.ERROR, "Error", "Los ID son los mismos.");
+                return;
+            }else if (!graphController.isNodeIdAlreadyRegistered(sourceId)) {
+                showAlert(Alert.AlertType.ERROR, "Error", "El nodo fuente no existe.");
+                return;
+            }else if (!graphController.isNodeIdAlreadyRegistered(targetId)) {
+                showAlert(Alert.AlertType.ERROR, "Error", "El nodo destino no existe.");
                 return;
             }
 
