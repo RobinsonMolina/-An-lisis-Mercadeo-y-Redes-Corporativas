@@ -21,8 +21,7 @@ public class GraphView {
 
     private static Graph graph;
     Map<Node, Circle> nodeShapes = new HashMap<>();
-    public GraphView(Graph graph) {
-        this.graph = graph;
+    public GraphView() {
     }
 
     public static void setGraph(Graph graphData) {

@@ -105,7 +105,7 @@ public class Dashboard {
         viewGraphButton.setOnAction(e -> viewGraph());
         loadGraphButton.setOnAction(e -> loadGraph());
         centralidadButton.setOnAction(e -> centralidad());
-        comunityButton.setOnAction(e -> comunity());
+        //comunityButton.setOnAction(e -> comunity());
         saleButton.setOnAction(e -> sale());
         productBundleButton.setOnAction(e -> showFrequentProductBundles());
 
@@ -232,7 +232,7 @@ public class Dashboard {
         System.out.println("viewGraph");
         BorderPane root = new BorderPane();
         if (graphController.getGraph() != null && !graphController.getGraph().getNodes().isEmpty()) {
-            GraphView graphView = new GraphView(graphController.getGraph());
+            GraphView graphView = new GraphView();
             GraphController.getInstance().getGraph();
             principal.setCenter(graphView.getGraphContainer());
         } else {
