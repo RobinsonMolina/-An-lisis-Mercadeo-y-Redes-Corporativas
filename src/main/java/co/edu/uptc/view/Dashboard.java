@@ -6,20 +6,35 @@ import co.edu.uptc.model.TableRowData;
 import co.edu.uptc.model.entities.Graph;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import co.edu.uptc.model.entities.Node;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Separator;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import co.edu.uptc.model.entities.Node;
 
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 
 public class Dashboard {
 
@@ -27,8 +42,10 @@ public class Dashboard {
     private VBox option;
     private VBox menu;
     private HBox hIcon;
+    private VBox communityOptions;
     private BorderPane root;
     private BorderPane principal;
+    private Button comunityButton;
 
     public Dashboard(GraphController graphController) {
         this.graphController = graphController;
@@ -39,6 +56,7 @@ public class Dashboard {
         menu = new VBox();
         option = new VBox(10);
         hIcon = new HBox();
+        communityOptions = new VBox();
         root = new BorderPane();
 
         createMenu();
@@ -54,7 +72,7 @@ public class Dashboard {
         option.setPadding(new Insets(10));
         option.setStyle("-fx-background-color: #f0f8ff;");
         option.setPrefWidth(200);
-        option.setPrefHeight(600); 
+        option.setPrefHeight(600);
         option.setAlignment(Pos.CENTER);
 
         Label menuTitle = new Label("Menú");
@@ -64,11 +82,25 @@ public class Dashboard {
         Button viewGraphButton = createStyledButton("Ver grafo");
         Button loadGraphButton = createStyledButton("Cargar grafo");
         Button centralidadButton = createStyledButton("Centralidad");
-        Button comunityButton = createStyledButton("Comunidades");
+        comunityButton = new Button("Comunidades");
         Button saleButton = createStyledButton("Similitud de Empresas");
         Button productBundleButton = createStyledButton("Similitud de Productos");
 
 
+        Button communityUnoButton = new Button("Comunidades de Grafo");
+        Button superCommunityButton = new Button("Comunidades con supernodos");
+
+        comunityButton.setOnAction(e -> toggleCommunityOptions());
+        // Crear contenedor y ocultarlo inicialmente
+        communityOptions = new VBox(5, communityUnoButton, superCommunityButton);
+        communityOptions.setPadding(new Insets(10));
+        communityOptions.setAlignment(Pos.CENTER_LEFT);
+        communityOptions.setVisible(false);
+        communityOptions.setManaged(false); // Ocultar completamente del layout
+        comunityButton.setOnAction(e -> toggleCommunityOptions());
+
+        communityUnoButton.setOnAction(e -> comunity(1));
+        superCommunityButton.setOnAction(e -> comunity(2));
         createGraphButton.setOnAction(e -> showCreateGraphMenu());
         viewGraphButton.setOnAction(e -> viewGraph());
         loadGraphButton.setOnAction(e -> loadGraph());
@@ -86,6 +118,7 @@ public class Dashboard {
             loadGraphButton,
             centralidadButton,
             comunityButton,
+                communityOptions,
             saleButton,
             productBundleButton
         );
@@ -137,12 +170,18 @@ public class Dashboard {
         return hIcon;
     }
 
+    private void toggleCommunityOptions() {
+        boolean isVisible = communityOptions.isVisible();
+        communityOptions.setVisible(!isVisible);
+        communityOptions.setManaged(!isVisible);
+    }
+
     private void showCreateGraphMenu() {
         BorderPane root = new BorderPane();
         VBox createGraphArea = new VBox(10);
         createGraphArea.setPadding(new Insets(20));
         createGraphArea.setAlignment(Pos.CENTER);
-        
+
         createGraphArea.setStyle("-fx-background-color: #f0f8ff;");
 
         Label title = new Label("Opciones de creación");
@@ -173,7 +212,7 @@ public class Dashboard {
 
         principal.setCenter(createGraphArea);
     }
-    
+
     private Button createStyledButton(String text, String color) {
         Button button = new Button(text);
         button.setStyle(
@@ -220,11 +259,11 @@ public class Dashboard {
             System.out.println("Antes de elegir el archivo");
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Archivos CSV", "*.csv"));
             File file = fileChooser.showOpenDialog(null);
-            
+
             if (file != null && file.exists()) {
                 graphController.loadGraphFromCSV(file.getAbsolutePath());
                 if (graphController.getGraph() != null && !graphController.getGraph().getNodes().isEmpty()) {
-                    viewGraph(); 
+                    viewGraph();
                 } else {
                     System.out.println("El grafo cargado está vacío o no es válido.");
                 }
@@ -284,24 +323,22 @@ public class Dashboard {
         addNodePane.setCenter(content);
         principal.setCenter(addNodePane);
     }
-    
-    
 
     private void styleButton(Button button) {
     	button.setStyle(
-    		    "-fx-background-color: #2196F3; " + 
-    		    "-fx-text-fill: white; " +         
-    		    "-fx-font-weight: bold; " +        
-    		    "-fx-background-radius: 5;"       
+    		    "-fx-background-color: #2196F3; " +
+    		    "-fx-text-fill: white; " +
+    		    "-fx-font-weight: bold; " +
+    		    "-fx-background-radius: 5;"
     		);
 	}
-    
+
     private void styleButtonDelete(Button button) {
     	button.setStyle(
-    		    "-fx-background-color: #FF0000; " + 
-    		    "-fx-text-fill: white; " +         
-    		    "-fx-font-weight: bold; " +        
-    		    "-fx-background-radius: 5;"       
+    		    "-fx-background-color: #FF0000; " +
+    		    "-fx-text-fill: white; " +
+    		    "-fx-font-weight: bold; " +
+    		    "-fx-background-radius: 5;"
     		);
 	}
 
@@ -339,7 +376,7 @@ public class Dashboard {
                 showAlert(Alert.AlertType.ERROR, "Error", "No se puede crear una relacion con la misma entidad");
                 return;
             }
-            
+
             try {
                 double weight = Double.parseDouble(weightText);
                 graphController.addEdge(sourceId, targetId, weight);
@@ -357,7 +394,7 @@ public class Dashboard {
     public void removeNode() {
         BorderPane removeNodePane = new BorderPane();
         VBox content = new VBox(10);
-        boolean result = false; 
+        boolean result = false;
         content.setPadding(new Insets(20));
         content.setAlignment(Pos.CENTER);
         content.setStyle("-fx-background-color: #f0f8ff;");
@@ -429,7 +466,6 @@ public class Dashboard {
                 showAlert(Alert.AlertType.ERROR, "Error", "El nodo destino no existe.");
                 return;
             }
-
 
             graphController.removeEdge(sourceId, targetId);
             showAlert(Alert.AlertType.INFORMATION, "Éxito", "Arista eliminada correctamente.");
@@ -559,7 +595,7 @@ public class Dashboard {
     degreeCentralityButton.setOnAction(e -> {
         Map<Node, Integer> degreeResults = graphController.calculateDegreeCentrality();
         StringBuilder results = new StringBuilder("Centralidad de Grado:\n");
-        degreeResults.forEach((node, degree) -> 
+        degreeResults.forEach((node, degree) ->
             results.append(node.getName()).append(": ").append(degree).append("\n"));
         resultsArea.setText(results.toString());
     });
@@ -567,7 +603,7 @@ public class Dashboard {
     betweennessCentralityButton.setOnAction(e -> {
         Map<Node, Double> betweennessResults = graphController.calculateBetweennessCentrality();
         StringBuilder results = new StringBuilder("Centralidad de Intermediación:\n");
-        betweennessResults.forEach((node, betweenness) -> 
+        betweennessResults.forEach((node, betweenness) ->
             results.append(node.getName()).append(": ").append(betweenness).append("\n"));
         resultsArea.setText(results.toString());
     });
@@ -575,7 +611,7 @@ public class Dashboard {
     closenessCentralityButton.setOnAction(e -> {
         Map<Node, Double> closenessResults = graphController.calculateClosenessCentrality();
         StringBuilder results = new StringBuilder("Centralidad de Cercanía:\n");
-        closenessResults.forEach((node, closeness) -> 
+        closenessResults.forEach((node, closeness) ->
             results.append(node.getName()).append(": ").append(closeness).append("\n"));
         resultsArea.setText(results.toString());
     });
@@ -585,8 +621,55 @@ public class Dashboard {
 }
 
 
-    private void comunity() {
-        // Vista para comunidades
+    /*
+     * private void comunity() {
+     * List<Set<Node>> communities = graphController.detectCommunities();
+     * Map<Node, Color> nodeColors = new HashMap<>();
+     * Random rand = new Random();
+     *
+     * // Asignar colores únicos a cada comunidad
+     * for (Set<Node> community : communities) {
+     * Color color = Color.rgb(rand.nextInt(256), rand.nextInt(256),
+     * rand.nextInt(256));
+     * for (Node node : community) {
+     * nodeColors.put(node, color);
+     * }
+     * }
+     *
+     * // Crear vista con el grafo de comunidades
+     * GraphView graphView = new GraphView();
+     * graphView.setGraph(graphController.getGraph());
+     *
+     * principal.setCenter(graphView.getGraphCommunity(nodeColors));
+     * }
+     */
+
+    private void comunity(int option) {
+        // Detectar comunidades
+        List<Set<Node>> communities = graphController.detectCommunities();
+        Map<Node, Color> nodeColors = new HashMap<>();
+        Random rand = new Random();
+
+        // Asignar colores únicos a cada comunidad
+        for (Set<Node> community : communities) {
+            Color color = Color.rgb(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256));
+            for (Node node : community) {
+                nodeColors.put(node, color);
+            }
+        }
+
+        // Crear la vista del grafo con comunidades (supernodos)
+        GraphView graphView = new GraphView();
+        graphView.setGraph(graphController.getGraph());
+
+        System.out.println("Opcion: " + option);
+        if (option == 1) {
+            System.out.println("Comunidades de grafo");
+            principal.setCenter(graphView.getGraphCommunity(nodeColors));
+        } else if (option == 2) {
+            System.out.println("Comunidades con supernodos");
+            principal.setCenter(graphView.getGraphCommunity(nodeColors, communities));
+        }
     }
 
     private void sale() {
@@ -663,6 +746,6 @@ public class Dashboard {
         alert.setContentText(message);
         alert.showAndWait();
     }
-    
+
 
 }

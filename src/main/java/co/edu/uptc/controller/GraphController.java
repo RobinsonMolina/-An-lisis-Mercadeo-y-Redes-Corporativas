@@ -1,5 +1,14 @@
 package co.edu.uptc.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
+
 import co.edu.uptc.model.entities.Graph;
 import co.edu.uptc.model.entities.Node;
 import co.edu.uptc.persistence.ManageFile;
@@ -7,7 +16,7 @@ import java.util.*;
 
 public class GraphController {
 
-    private static GraphController instance; 
+    private static GraphController instance; // Single instance of the class
     private Graph graph;
     private ManageFile manageFile;
 
@@ -22,13 +31,13 @@ public class GraphController {
         }
         return instance;
     }
-    
+
     private void saveGraph() {
-        String resourcePath = "src/main/resources/grafoCreado.csv"; 
+        String resourcePath = "src/main/resources/grafoCreado.csv";
         manageFile.saveGraphToCSV(graph, resourcePath);
     }
 
-    
+
     public void loadGraphFromCSV(String filePath) {
         this.graph = manageFile.loadGraphFromCSV(filePath);
     }
@@ -50,14 +59,13 @@ public class GraphController {
         }
     }
 
-    // Método para encontrar un nodo por su ID
     private Node findNodeById(String id) {
         return graph.getNodes().stream().filter(n -> n.getId().equals(id)).findFirst().orElse(null);
     }
-    
-   
 
-    
+
+
+
 
     // Verificar si un ID de nodo ya está registrado
     public boolean isNodeIdAlreadyRegistered(String id) {
@@ -70,13 +78,14 @@ public class GraphController {
     }
 
     // Eliminar un nodo
-    public void removeNode(String id) {
+    public boolean removeNode(String id) {
         Node node = findNodeById(id);
         if (node != null) {
             graph.removeNode(node);
         } else {
             System.out.println("Error: Nodo no encontrado.");
         }
+        return false;
     }
 
     // Eliminar una arista
@@ -110,6 +119,7 @@ public class GraphController {
         if (source != null && target != null) {
             return graph.updateEdge(source, target, newWeight);
         }
+
         return false;
     }
 
@@ -123,7 +133,7 @@ public class GraphController {
         for (Node node : getNodes()) {
             centrality.put(node, 0.0);
         }
-    
+
         for (Node source : getNodes()) {
             for (Node target : getNodes()) {
                 if (!source.equals(target)) {
@@ -147,20 +157,20 @@ public class GraphController {
                 }
             }
         }
-    
+
         return centrality;
     }
 
     public Set<Node> getNodes() {
         return graph.getNodes(); // `graph` es la instancia de la clase Graph dentro de GraphController
     }
-    
+
     public List<List<Node>> getAllShortestPaths(Node source, Node target) {
         return graph.getAllShortestPaths(source, target); // `graph` es la instancia de Graph en GraphController
     }
-    
-    
-    
+
+
+
     public Map<Node, Integer> calculateDegreeCentrality() {
         Map<Node, Integer> degreeCentrality = new HashMap<>();
         for (Node node : graph.getNodes()) {
@@ -175,25 +185,25 @@ public class GraphController {
         }
         return degreeCentrality;
     }
-    
+
     public Map<Node, Double> calculateClosenessCentrality() {
         Map<Node, Double> closenessCentrality = new HashMap<>();
-    
+
         for (Node node : graph.getNodes()) {
             double totalDistance = 0.0;
             int reachableNodes = 0;
-    
+
             for (Node otherNode : graph.getNodes()) {
                 if (!node.equals(otherNode)) {
                     int distance = graph.getShortestPathLength(node, otherNode);
-    
+
                     if (distance > 0) { // Ignoramos distancias negativas o nodos no alcanzables
                         totalDistance += distance;
                         reachableNodes++;
                     }
                 }
             }
-    
+
             // Calcular la centralidad si hay nodos alcanzables
             if (reachableNodes > 0 && totalDistance > 0) {
                 closenessCentrality.put(node, (double) reachableNodes / totalDistance);
@@ -201,14 +211,53 @@ public class GraphController {
                 closenessCentrality.put(node, 0.0); // Nodo aislado
             }
         }
-    
+
         return closenessCentrality;
     }
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+    public List<Set<Node>> detectCommunities() {
+        Map<Node, Integer> communityMap = new HashMap<>();
+        int communityId = 0;
+
+        for (Node node : graph.getNodes()) {
+            if (!communityMap.containsKey(node)) {
+                Set<Node> community = new HashSet<>();
+                exploreCommunity(node, community, communityMap, communityId++);
+            }
+        }
+
+        // Agrupar comunidades
+        Map<Integer, Set<Node>> communities = new HashMap<>();
+        for (Map.Entry<Node, Integer> entry : communityMap.entrySet()) {
+            communities.computeIfAbsent(entry.getValue(), k -> new HashSet<>()).add(entry.getKey());
+        }
+
+        return new ArrayList<>(communities.values());
+    }
+
+    private void exploreCommunity(Node node, Set<Node> community, Map<Node, Integer> communityMap, int communityId) {
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(node);
+
+        while (!queue.isEmpty()) {
+            Node current = queue.poll();
+            if (!communityMap.containsKey(current)) {
+                community.add(current);
+                communityMap.put(current, communityId);
+
+                for (Node neighbor : graph.getNeighbors(current)) {
+                    if (!communityMap.containsKey(neighbor)) {
+                        queue.add(neighbor);
+                    }
+                }
+            }
+        }
+    }
 }
