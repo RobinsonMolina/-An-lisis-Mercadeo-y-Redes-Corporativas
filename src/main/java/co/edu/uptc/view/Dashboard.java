@@ -1,14 +1,14 @@
 package co.edu.uptc.view;
 
 import co.edu.uptc.controller.GraphController;
+import co.edu.uptc.controller.SimilarityController;
+import co.edu.uptc.model.entities.Graph;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Separator;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -17,9 +17,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import co.edu.uptc.model.entities.Node;
 
-import javafx.scene.control.TextField;
-
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 
 public class Dashboard {
@@ -66,7 +65,9 @@ public class Dashboard {
         Button loadGraphButton = createStyledButton("Cargar grafo");
         Button centralidadButton = createStyledButton("Centralidad");
         Button comunityButton = createStyledButton("Comunidades");
-        Button saleButton = createStyledButton("Similitudes");
+        Button saleButton = new Button("Competidores");
+        Button productBundleButton = new Button("Paquetes de Productos Frecuentes");
+
 
         createGraphButton.setOnAction(e -> showCreateGraphMenu());
         viewGraphButton.setOnAction(e -> viewGraph());
@@ -74,6 +75,8 @@ public class Dashboard {
         centralidadButton.setOnAction(e -> centralidad());
         comunityButton.setOnAction(e -> comunity());
         saleButton.setOnAction(e -> sale());
+        productBundleButton.setOnAction(e -> showFrequentProductBundles());
+
 
         option.getChildren().addAll(
             menuTitle,
@@ -83,7 +86,8 @@ public class Dashboard {
             loadGraphButton,
             centralidadButton,
             comunityButton,
-            saleButton
+            saleButton,
+            productBundleButton
         );
         return option;
     }
@@ -586,7 +590,76 @@ public class Dashboard {
     }
 
     private void sale() {
-        // Vista para los productos más vendidos
+        Graph graph = graphController.getGraph();
+
+        if (graph == null || graph.getNodes().isEmpty()) {
+            showAlert(Alert.AlertType.ERROR, "Error", "No hay datos en el grafo");
+            return;
+        }
+
+        SimilarityController analysis = new SimilarityController();
+        Map<Node, List<Node>> similarEntities = analysis.findSimilarEntities(graph);
+
+        // Crear la tabla
+        TableView<TableRowData> tableView = new TableView<>();
+        TableColumn<TableRowData, String> entityColumn = new TableColumn<>("Entidad");
+        TableColumn<TableRowData, String> similarColumn = new TableColumn<>("Entidades Similares");
+
+        entityColumn.setCellValueFactory(data -> data.getValue().entityProperty());
+        similarColumn.setCellValueFactory(data -> data.getValue().similarEntitiesProperty());
+
+        tableView.getColumns().addAll(entityColumn, similarColumn);
+
+        // Rellenar datos
+        ObservableList<TableRowData> rows = FXCollections.observableArrayList();
+        for (Map.Entry<Node, List<Node>> entry : similarEntities.entrySet()) {
+            String entity = entry.getKey().getName();
+            String similar = entry.getValue().stream().map(Node::getName).reduce("", (a, b) -> a + ", " + b);
+            rows.add(new TableRowData(entity, similar));
+        }
+
+        tableView.setItems(rows);
+
+        // Configurar layout
+        VBox tableContainer = new VBox(10, new Label("Similitud de Entidades"), tableView);
+        tableContainer.setAlignment(Pos.CENTER);
+        tableContainer.setPadding(new Insets(20));
+
+        principal.setCenter(tableContainer);
+    }
+    private void showFrequentProductBundles() {
+        Graph graph = graphController.getGraph();
+
+        if (graph == null || graph.getNodes().isEmpty()) {
+            showAlert(Alert.AlertType.ERROR, "Error", "No hay datos en el grafo");
+            return;
+        }
+
+        SimilarityController analysis = new SimilarityController();
+        List<List<Node>> bundles = analysis.findFrequentProductBundles(graph, 50.0); // Umbral ajustable
+
+        // Crear la tabla
+        TableView<TableRowData> tableView = new TableView<>();
+        TableColumn<TableRowData, String> bundleColumn = new TableColumn<>("Productos Frecuentes");
+
+        bundleColumn.setCellValueFactory(data -> data.getValue().bundleProperty());
+        tableView.getColumns().add(bundleColumn);
+
+        // Rellenar datos
+        ObservableList<TableRowData> rows = FXCollections.observableArrayList();
+        for (List<Node> bundle : bundles) {
+            String products = bundle.stream().map(Node::getName).reduce("", (a, b) -> a + ", " + b);
+            rows.add(new TableRowData(products));
+        }
+
+        tableView.setItems(rows);
+
+        // Configurar layout
+        VBox tableContainer = new VBox(10, new Label("Paquetes de Productos Frecuentes"), tableView);
+        tableContainer.setAlignment(Pos.CENTER);
+        tableContainer.setPadding(new Insets(20));
+
+        principal.setCenter(tableContainer);
     }
 
     private void showAlert(Alert.AlertType alertType, String title, String message) {
