@@ -42,7 +42,6 @@ public class Main extends Application {
         graphController.addEdge("4", "8", 80.0);
         graphController.addEdge("1", "8", 200.0);
 
-
         Dashboard dashboard = new Dashboard(graphController);
 
         primaryStage.setTitle("Gestión de Grafos");
