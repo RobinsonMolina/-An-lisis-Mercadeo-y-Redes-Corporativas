@@ -82,14 +82,17 @@ public class Dashboard {
         Button viewGraphButton = createStyledButton("Ver grafo");
         Button loadGraphButton = createStyledButton("Cargar grafo");
         Button centralidadButton = createStyledButton("Centralidad");
-        comunityButton = new Button("Comunidades");
+        comunityButton = createStyledButton("Comunidades");
         Button saleButton = createStyledButton("Similitud de Empresas");
         Button productBundleButton = createStyledButton("Similitud de Productos");
+        Button report = createStyledButton("Informe");
 
 
 
         Button communityUnoButton = new Button("Comunidades de Grafo");
         Button superCommunityButton = new Button("Comunidades con supernodos");
+        styleButton(communityUnoButton);
+        styleButton(superCommunityButton);
 
         comunityButton.setOnAction(e -> toggleCommunityOptions());
         // Crear contenedor y ocultarlo inicialmente
@@ -109,6 +112,8 @@ public class Dashboard {
         //comunityButton.setOnAction(e -> comunity());
         saleButton.setOnAction(e -> sale());
         productBundleButton.setOnAction(e -> showFrequentProductBundles());
+        report.setOnAction(e -> showReport());
+        
 
 
         option.getChildren().addAll(
@@ -121,12 +126,17 @@ public class Dashboard {
             comunityButton,
                 communityOptions,
             saleButton,
-            productBundleButton
+            productBundleButton,
+            report
         );
         return option;
     }
 
-    private Button createStyledButton(String text) {
+    private void showReport() {
+		
+	}
+
+	private Button createStyledButton(String text) {
         Button button = new Button(text);
         button.setStyle(
             "-fx-font-size: 12px; " +
