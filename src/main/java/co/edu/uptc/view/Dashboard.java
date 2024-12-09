@@ -203,8 +203,9 @@ public class Dashboard {
         }
     }
 
+
     private void loadGraph() {
-        System.out.println("Entro al metodo");
+        System.out.println("Entro al método");
         BorderPane root = new BorderPane();
         Label loadGraphLabel = new Label("Cargar Grafo");
         loadGraphLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
@@ -215,9 +216,16 @@ public class Dashboard {
             System.out.println("Antes de elegir el archivo");
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Archivos CSV", "*.csv"));
             File file = fileChooser.showOpenDialog(null);
-            if (file != null) {
+            
+            if (file != null && file.exists()) {
                 graphController.loadGraphFromCSV(file.getAbsolutePath());
-                viewGraph(); // Actualizar la vista con el grafo cargado
+                if (graphController.getGraph() != null && !graphController.getGraph().getNodes().isEmpty()) {
+                    viewGraph(); 
+                } else {
+                    System.out.println("El grafo cargado está vacío o no es válido.");
+                }
+            } else {
+                System.out.println("No se seleccionó un archivo o el archivo no existe.");
             }
         });
         VBox loadGraphArea = new VBox(10, loadGraphLabel, loadButton);
@@ -227,6 +235,7 @@ public class Dashboard {
         root.setCenter(loadGraphArea);
         principal.setCenter(root);
     }
+
 
     public void addNode() {
         System.out.println("Cargando la vista para agregar nodo...");

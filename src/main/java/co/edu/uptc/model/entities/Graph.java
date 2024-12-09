@@ -90,6 +90,16 @@ public class Graph {
         }
         return false;
     }
+    
+    public Node getNodeById(String id) {
+        for (Node node : adjacencyMap.keySet()) {
+            if (node.getId().equals(id)) {
+                return node;
+            }
+        }
+        return null;
+    }
+
 
     @Override
     public String toString() {

@@ -7,7 +7,7 @@ import java.util.*;
 
 public class GraphController {
 
-    private static GraphController instance; // Singleton
+    private static GraphController instance; 
     private Graph graph;
     private ManageFile manageFile;
 
@@ -22,8 +22,17 @@ public class GraphController {
         }
         return instance;
     }
+    
+    private void saveGraph() {
+        String resourcePath = "src/main/resources/grafoCreado.csv"; 
+        manageFile.saveGraphToCSV(graph, resourcePath);
+    }
 
-    // Método para agregar un nodo
+    
+    public void loadGraphFromCSV(String filePath) {
+        this.graph = manageFile.loadGraphFromCSV(filePath);
+    }
+
     public void addNode(String id, String name, String type) {
         Node node = new Node(id, name, type);
         graph.addNode(node);
@@ -45,13 +54,10 @@ public class GraphController {
     private Node findNodeById(String id) {
         return graph.getNodes().stream().filter(n -> n.getId().equals(id)).findFirst().orElse(null);
     }
+    
+   
 
-    // --- Métodos agregados sin eliminar el trabajo de tus compañeros ---
-
-    // Cargar un grafo desde un archivo CSV
-    public void loadGraphFromCSV(String filePath) {
-        this.graph = manageFile.loadGraphFromCSV(filePath);
-    }
+    
 
     // Verificar si un ID de nodo ya está registrado
     public boolean isNodeIdAlreadyRegistered(String id) {
