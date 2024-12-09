@@ -18,22 +18,38 @@ public class ManageFile {
         Graph graph = new Graph();
 
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            line = br.readLine();
+            String line = br.readLine(); 
+            System.out.println("Encabezado leído: " + line);
+
             while ((line = br.readLine()) != null) {
-                String[] values = line.split(",");
-                if (values.length == 4) {
-                    String source = values[0];
-                    String target = values[1];
-                    String type = values[2];
-                    double weight = Double.parseDouble(values[3]);
+                System.out.println("Procesando línea: " + line);
 
-                    Node sourceNode = new Node(source, source, type);
-                    Node targetNode = new Node(target, target, type);
+                String[] values = line.split(","); 
+                if (values.length >= 4) {
+                    try {
+                        String source = values[0].trim();
+                        String target = values[1].trim();
+                        String type = values[2].trim();
+                        double weight = Double.parseDouble(values[3].replace(",", "."));
 
-                    graph.addNode(sourceNode);
-                    graph.addNode(targetNode);
-                    graph.addEdge(sourceNode, targetNode, weight);
+                        Node sourceNode = graph.getNodeById(source);
+                        if (sourceNode == null) {
+                            sourceNode = new Node(source, source, type);
+                            graph.addNode(sourceNode);
+                        }
+
+                        Node targetNode = graph.getNodeById(target);
+                        if (targetNode == null) {
+                            targetNode = new Node(target, target, type);
+                            graph.addNode(targetNode);
+                        }
+
+                        graph.addEdge(sourceNode, targetNode, weight);
+                    } catch (NumberFormatException e) {
+                        System.out.println("Error al convertir el peso en línea: " + line);
+                    }
+                } else {
+                    System.out.println("Línea no válida (longitud incorrecta): " + line);
                 }
             }
         } catch (IOException e) {
@@ -42,20 +58,19 @@ public class ManageFile {
 
         return graph;
     }
+
+
     
     public void saveGraphToCSV(Graph graph, String filePath) {
         try (FileWriter writer = new FileWriter(filePath)) {
-            // Escribe la cabecera
-            writer.append("Origen,Destino,Peso,Estado\n");
+            writer.append("Origen,Destino,Tipo,Peso\n");
 
-            // Escribe las aristas
             for (Edge edge : graph.getEdges()) {
                 String source = edge.getSource().getId();
                 String target = edge.getTarget().getId();
+                String type = edge.getSource().getType(); 
                 double weight = edge.getWeight();
-                String status = edge.isDeleted() ? "Eliminado" : "Persistente";
-
-                writer.append(String.format("%s,%s,%.2f,%s\n", source, target, weight, status));
+                writer.append(String.format("%s,%s,%s,%.2f\n", source, target, type, weight));
             }
 
             System.out.println("Grafo guardado exitosamente en " + filePath);
@@ -63,4 +78,6 @@ public class ManageFile {
             System.out.println("Error al guardar el archivo CSV: " + e.getMessage());
         }
     }
+
+
 }
