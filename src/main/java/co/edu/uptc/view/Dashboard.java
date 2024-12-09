@@ -87,6 +87,7 @@ public class Dashboard {
         Button productBundleButton = createStyledButton("Similitud de Productos");
 
 
+
         Button communityUnoButton = new Button("Comunidades de Grafo");
         Button superCommunityButton = new Button("Comunidades con supernodos");
 
@@ -158,13 +159,18 @@ public class Dashboard {
     private HBox createMenuToggleButton() {
         hIcon.setPadding(new Insets(5));
         hIcon.setAlignment(Pos.CENTER_LEFT);
+        hIcon.setStyle("-fx-background-color: #f0f8ff;");
 
+        //ImageView menuIcon = new ImageView(getClass().getResource("/Icon.png").toExternalForm());
         ImageView menuIcon = new ImageView(getClass().getResource("/Icon.png").toExternalForm());
+
+
 
         menuIcon.setFitWidth(24);
         menuIcon.setFitHeight(24);
 
         menuIcon.setOnMouseClicked(e -> option.setVisible(!option.isVisible()));
+        
 
         hIcon.getChildren().add(menuIcon);
         return hIcon;
@@ -232,7 +238,8 @@ public class Dashboard {
         System.out.println("viewGraph");
         BorderPane root = new BorderPane();
         if (graphController.getGraph() != null && !graphController.getGraph().getNodes().isEmpty()) {
-            GraphView graphView = new GraphView();
+        	GraphView graphView = new GraphView(graphController.getGraph());
+        	graphView.getGraphContainer().setStyle("-fx-background-color: #f0f8ff;");
             GraphController.getInstance().getGraph();
             principal.setCenter(graphView.getGraphContainer());
         } else {
@@ -251,8 +258,9 @@ public class Dashboard {
         System.out.println("Entro al método");
         BorderPane root = new BorderPane();
         Label loadGraphLabel = new Label("Cargar Grafo");
-        loadGraphLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+        loadGraphLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
         Button loadButton = new Button("Seleccionar archivo");
+        styleButton(loadButton);
         loadButton.setOnAction(e -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Seleccionar archivo CSV");
@@ -580,13 +588,17 @@ public class Dashboard {
     VBox centralityMenu = new VBox(10);
     centralityMenu.setPadding(new Insets(20));
     centralityMenu.setAlignment(Pos.CENTER);
+    centralityMenu.setStyle("-fx-background-color: #f0f8ff;");
 
     Label title = new Label("Análisis de Centralidad");
-    title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+    title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
 
     Button degreeCentralityButton = new Button("Centralidad de Grado");
     Button betweennessCentralityButton = new Button("Centralidad de Intermediación");
     Button closenessCentralityButton = new Button("Centralidad de Cercanía");
+    styleButton(degreeCentralityButton);
+    styleButton(betweennessCentralityButton);
+    styleButton(closenessCentralityButton);
 
     TextArea resultsArea = new TextArea();
     resultsArea.setEditable(false);
@@ -704,6 +716,8 @@ public class Dashboard {
         VBox tableContainer = new VBox(10, new Label("Similitud de Entidades"), tableView);
         tableContainer.setAlignment(Pos.CENTER);
         tableContainer.setPadding(new Insets(20));
+        tableContainer.setStyle("-fx-background-color: #f0f8ff; -fx-font-size: 16px; -fx-font-weight: bold;");
+        
 
         principal.setCenter(tableContainer);
     }
@@ -735,6 +749,7 @@ public class Dashboard {
         VBox tableContainer = new VBox(10, new Label("Paquetes de Productos Frecuentes"), tableView);
         tableContainer.setAlignment(Pos.CENTER);
         tableContainer.setPadding(new Insets(20));
+        tableContainer.setStyle("-fx-background-color: #f0f8ff; -fx-font-size: 16px; -fx-font-weight: bold;");
 
         principal.setCenter(tableContainer);
     }

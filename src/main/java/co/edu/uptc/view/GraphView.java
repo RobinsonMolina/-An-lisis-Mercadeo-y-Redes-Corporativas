@@ -20,13 +20,22 @@ import java.util.Set;
 public class GraphView {
 
     private static Graph graph;
+
     Map<Node, Circle> nodeShapes = new HashMap<>();
     public GraphView() {
+    
     }
+
+    public GraphView(Graph graph) {
+        this.graph = graph;
+    }
+    
 
     public static void setGraph(Graph graphData) {
         graph = graphData;
     }
+    
+   
 
     public Circle getNodeShape(Node node) {
         return nodeShapes.get(node);
