@@ -53,18 +53,20 @@ public class Dashboard {
 
     private VBox createMenu() {
         option.setPadding(new Insets(10));
-        option.setStyle("-fx-background-color: #f0f0f0;");
+        option.setStyle("-fx-background-color: #f0f8ff;");
         option.setPrefWidth(200);
+        option.setPrefHeight(600); 
+        option.setAlignment(Pos.CENTER);
 
         Label menuTitle = new Label("Menú");
         menuTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
-        Button createGraphButton = new Button("Crear grafo");
-        Button viewGraphButton = new Button("Ver grafo");
-        Button loadGraphButton = new Button("Cargar grafo");
-        Button centralidadButton = new Button("Centralidad");
-        Button comunityButton = new Button("Comunidades");
-        Button saleButton = new Button("Ventas");
+        Button createGraphButton = createStyledButton("Crear grafo");
+        Button viewGraphButton = createStyledButton("Ver grafo");
+        Button loadGraphButton = createStyledButton("Cargar grafo");
+        Button centralidadButton = createStyledButton("Centralidad");
+        Button comunityButton = createStyledButton("Comunidades");
+        Button saleButton = createStyledButton("Similitudes");
 
         createGraphButton.setOnAction(e -> showCreateGraphMenu());
         viewGraphButton.setOnAction(e -> viewGraph());
@@ -74,18 +76,47 @@ public class Dashboard {
         saleButton.setOnAction(e -> sale());
 
         option.getChildren().addAll(
-    menuTitle, 
-    new Separator(), 
-    createGraphButton, 
-    viewGraphButton, 
-    loadGraphButton, 
-    centralidadButton, 
-    comunityButton, 
-    saleButton
-);
-
+            menuTitle,
+            new Separator(),
+            createGraphButton,
+            viewGraphButton,
+            loadGraphButton,
+            centralidadButton,
+            comunityButton,
+            saleButton
+        );
         return option;
     }
+
+    private Button createStyledButton(String text) {
+        Button button = new Button(text);
+        button.setStyle(
+            "-fx-font-size: 12px; " +
+            "-fx-font-weight: bold; " +
+            "-fx-background-color: #4CAF50; " +
+            "-fx-text-fill: white; " +
+            "-fx-background-radius: 5px; " +
+            "-fx-padding: 10;"
+        );
+        button.setOnMouseEntered(e -> button.setStyle(
+            "-fx-font-size: 12px; " +
+            "-fx-font-weight: bold; " +
+            "-fx-background-color: #45a049; " +
+            "-fx-text-fill: white; " +
+            "-fx-background-radius: 5px; " +
+            "-fx-padding: 10;"
+        ));
+        button.setOnMouseExited(e -> button.setStyle(
+            "-fx-font-size: 12px; " +
+            "-fx-font-weight: bold; " +
+            "-fx-background-color: #4CAF50; " +
+            "-fx-text-fill: white; " +
+            "-fx-background-radius: 5px; " +
+            "-fx-padding: 10;"
+        ));
+        return button;
+    }
+
 
     private HBox createMenuToggleButton() {
         hIcon.setPadding(new Insets(5));
@@ -106,17 +137,19 @@ public class Dashboard {
         BorderPane root = new BorderPane();
         VBox createGraphArea = new VBox(10);
         createGraphArea.setPadding(new Insets(20));
-        createGraphArea.setAlignment(Pos.TOP_CENTER);
+        createGraphArea.setAlignment(Pos.CENTER);
+        
+        createGraphArea.setStyle("-fx-background-color: #f0f8ff;");
 
         Label title = new Label("Opciones de creación");
-        title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+        title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
 
-        Button addNodeButton = new Button("Añadir Nodo");
-        Button addEdgeButton = new Button("Añadir Arista");
-        Button removeNodeButton = new Button("Eliminar Nodo");
-        Button removeEdgeButton = new Button("Eliminar Arista");
-        Button updateNodeButton = new Button("Actualizar Nodo");
-        Button updateEdgeButton = new Button("Actualizar Arista");
+        Button addNodeButton = createStyledButton("Añadir Nodo", "#4CAF50");
+        Button addEdgeButton = createStyledButton("Añadir Arista", "#2196F3");
+        Button removeNodeButton = createStyledButton("Eliminar Nodo", "#FF5722");
+        Button removeEdgeButton = createStyledButton("Eliminar Arista", "#FFC107");
+        Button updateNodeButton = createStyledButton("Actualizar Nodo", "#9C27B0");
+        Button updateEdgeButton = createStyledButton("Actualizar Arista", "#3F51B5");
 
         addNodeButton.setOnAction(e -> addNode());
         addEdgeButton.setOnAction(e -> addEdge());
@@ -136,6 +169,21 @@ public class Dashboard {
 
         principal.setCenter(createGraphArea);
     }
+    
+    private Button createStyledButton(String text, String color) {
+        Button button = new Button(text);
+        button.setStyle(
+            "-fx-font-size: 14px;" +
+            "-fx-font-weight: bold;" +
+            "-fx-text-fill: white;" +
+            "-fx-background-color: " + color + ";" +
+            "-fx-background-radius: 5;" +
+            "-fx-border-radius: 5;" +
+            "-fx-padding: 10;"
+        );
+        button.setPrefWidth(200); // Establecer un ancho fijo para los botones
+        return button;
+    }
 
     private void viewGraph() {
         System.out.println("viewGraph");
@@ -150,6 +198,7 @@ public class Dashboard {
             VBox noDataArea = new VBox(noDataLabel);
             noDataArea.setAlignment(Pos.CENTER);
             noDataArea.setPadding(new Insets(20));
+            noDataArea.setStyle("-fx-background-color: #f0f8ff;");
             principal.setCenter(noDataArea);
         }
     }
@@ -174,6 +223,7 @@ public class Dashboard {
         VBox loadGraphArea = new VBox(10, loadGraphLabel, loadButton);
         loadGraphArea.setAlignment(Pos.CENTER);
         loadGraphArea.setPadding(new Insets(20));
+        loadGraphArea.setStyle("-fx-background-color: #f0f8ff;");
         root.setCenter(loadGraphArea);
         principal.setCenter(root);
     }
@@ -184,6 +234,7 @@ public class Dashboard {
         VBox content = new VBox(10);
         content.setPadding(new Insets(20));
         content.setAlignment(Pos.CENTER);
+        content.setStyle("-fx-background-color: #f0f8ff;");
 
         Label title = new Label("Agregar Nodo");
         title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
@@ -198,6 +249,7 @@ public class Dashboard {
         typeField.setPromptText("Tipo del nodo");
 
         Button submitButton = new Button("Agregar Nodo");
+        styleButton(submitButton);
         submitButton.setOnAction(e -> {
             String id = idField.getText();
             String name = nameField.getText();
@@ -205,12 +257,11 @@ public class Dashboard {
 
             if (id.isEmpty() || name.isEmpty() || type.isEmpty()) {
                 showAlert(Alert.AlertType.ERROR, "Error", "Todos los campos deben ser completados.");
-            } else if (graphController.isNodeIdAlreadyRegistered(id)) {
+            }else if (graphController.isNodeIdAlreadyRegistered(id)) {
                 showAlert(Alert.AlertType.ERROR, "Error", "El ID del nodo ya ha sido registrado.");
             } else if (graphController.isNodeNameAlreadyRegistered(name)) {
                 showAlert(Alert.AlertType.ERROR, "Error", "El nombre del nodo ya ha sido registrado.");
-            } 
-            else {
+            }else {
                 graphController.addNode(id, name, type);
                 showAlert(Alert.AlertType.INFORMATION, "Éxito", "Nodo agregado correctamente.");
             }
@@ -220,14 +271,34 @@ public class Dashboard {
         addNodePane.setCenter(content);
         principal.setCenter(addNodePane);
     }
+    
+    
 
+    private void styleButton(Button button) {
+    	button.setStyle(
+    		    "-fx-background-color: #2196F3; " + 
+    		    "-fx-text-fill: white; " +         
+    		    "-fx-font-weight: bold; " +        
+    		    "-fx-background-radius: 5;"       
+    		);
+	}
+    
+    private void styleButtonDelete(Button button) {
+    	button.setStyle(
+    		    "-fx-background-color: #FF0000; " + 
+    		    "-fx-text-fill: white; " +         
+    		    "-fx-font-weight: bold; " +        
+    		    "-fx-background-radius: 5;"       
+    		);
+	}
 
-    public void addEdge() {
+	public void addEdge() {
         System.out.println("Cargando la vista para agregar arista...");
         BorderPane addEdgePane = new BorderPane();
         VBox content = new VBox(10);
         content.setPadding(new Insets(20));
         content.setAlignment(Pos.CENTER);
+        content.setStyle("-fx-background-color: #f0f8ff;");
 
         Label title = new Label("Agregar Arista");
         title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
@@ -242,6 +313,7 @@ public class Dashboard {
         weightField.setPromptText("Peso de la arista");
 
         Button submitButton = new Button("Agregar Arista");
+        styleButton(submitButton);
         submitButton.setOnAction(e -> {
             String sourceId = sourceField.getText();
             String targetId = targetField.getText();
@@ -250,11 +322,11 @@ public class Dashboard {
             if (sourceId.isEmpty() || targetId.isEmpty() || weightText.isEmpty()) {
                 showAlert(Alert.AlertType.ERROR, "Error", "Todos los campos deben ser completados.");
                 return;
-            }if (sourceId.equalsIgnoreCase(targetId)) {
+            }else if (sourceId.equalsIgnoreCase(targetId)) {
                 showAlert(Alert.AlertType.ERROR, "Error", "No se puede crear una relacion con la misma entidad");
                 return;
             }
-
+            
             try {
                 double weight = Double.parseDouble(weightText);
                 graphController.addEdge(sourceId, targetId, weight);
@@ -275,6 +347,7 @@ public class Dashboard {
         boolean result = false; 
         content.setPadding(new Insets(20));
         content.setAlignment(Pos.CENTER);
+        content.setStyle("-fx-background-color: #f0f8ff;");
 
         Label title = new Label("Eliminar Nodo");
         title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
@@ -283,6 +356,7 @@ public class Dashboard {
         idField.setPromptText("ID del nodo a eliminar");
 
         Button submitButton = new Button("Eliminar Nodo");
+        styleButtonDelete(submitButton);
         submitButton.setOnAction(e -> {
             String nodeId = idField.getText();
 
@@ -312,6 +386,7 @@ public class Dashboard {
         VBox content = new VBox(10);
         content.setPadding(new Insets(20));
         content.setAlignment(Pos.CENTER);
+        content.setStyle("-fx-background-color: #f0f8ff;");
 
         Label title = new Label("Eliminar Arista");
         title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
@@ -323,6 +398,7 @@ public class Dashboard {
         targetField.setPromptText("ID nodo destino");
 
         Button submitButton = new Button("Eliminar Arista");
+        styleButtonDelete(submitButton);
         submitButton.setOnAction(e -> {
             String sourceId = sourceField.getText();
             String targetId = targetField.getText();
@@ -341,6 +417,7 @@ public class Dashboard {
                 return;
             }
 
+
             graphController.removeEdge(sourceId, targetId);
             showAlert(Alert.AlertType.INFORMATION, "Éxito", "Arista eliminada correctamente.");
         });
@@ -356,6 +433,7 @@ public class Dashboard {
         VBox content = new VBox(10);
         content.setPadding(new Insets(20));
         content.setAlignment(Pos.CENTER);
+        content.setStyle("-fx-background-color: #f0f8ff;");
 
         Label title = new Label("Actualizar Nodo");
         title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
@@ -370,6 +448,7 @@ public class Dashboard {
         typeField.setPromptText("Nuevo tipo del nodo");
 
         Button submitButton = new Button("Actualizar Nodo");
+        styleButton(submitButton);
         submitButton.setOnAction(e -> {
             String nodeId = idField.getText();
             String name = nameField.getText();
@@ -401,6 +480,7 @@ public class Dashboard {
         VBox content = new VBox(10);
         content.setPadding(new Insets(20));
         content.setAlignment(Pos.CENTER);
+        content.setStyle("-fx-background-color: #f0f8ff;");
 
         Label title = new Label("Actualizar Arista");
         title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
@@ -415,6 +495,7 @@ public class Dashboard {
         weightField.setPromptText("Nuevo peso de la arista");
 
         Button submitButton = new Button("Actualizar Arista");
+        styleButton(submitButton);
         submitButton.setOnAction(e -> {
             String sourceId = sourceField.getText();
             String targetId = targetField.getText();
