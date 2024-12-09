@@ -429,7 +429,31 @@ public class Dashboard {
         // Vista para centralidad
     }
 
+    /*
+     * private void comunity() {
+     * List<Set<Node>> communities = graphController.detectCommunities();
+     * Map<Node, Color> nodeColors = new HashMap<>();
+     * Random rand = new Random();
+     * 
+     * // Asignar colores únicos a cada comunidad
+     * for (Set<Node> community : communities) {
+     * Color color = Color.rgb(rand.nextInt(256), rand.nextInt(256),
+     * rand.nextInt(256));
+     * for (Node node : community) {
+     * nodeColors.put(node, color);
+     * }
+     * }
+     * 
+     * // Crear vista con el grafo de comunidades
+     * GraphView graphView = new GraphView();
+     * graphView.setGraph(graphController.getGraph());
+     * 
+     * principal.setCenter(graphView.getGraphCommunity(nodeColors));
+     * }
+     */
+
     private void comunity() {
+        // Detectar comunidades
         List<Set<Node>> communities = graphController.detectCommunities();
         Map<Node, Color> nodeColors = new HashMap<>();
         Random rand = new Random();
@@ -442,11 +466,11 @@ public class Dashboard {
             }
         }
 
-        // Crear vista con el grafo de comunidades
+        // Crear la vista del grafo con comunidades (supernodos)
         GraphView graphView = new GraphView();
         graphView.setGraph(graphController.getGraph());
 
-        principal.setCenter(graphView.getGraphCommunity(nodeColors));
+        principal.setCenter(graphView.getGraphCommunity(nodeColors, communities));
     }
 
     private void sale() {
