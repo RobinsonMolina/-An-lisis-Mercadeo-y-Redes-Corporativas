@@ -20,10 +20,7 @@ public class ManageFile {
 
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line = br.readLine();
-            System.out.println("Encabezado leído: " + line);
-
             while ((line = br.readLine()) != null) {
-                System.out.println("Procesando línea: " + line);
 
                 String[] values = line.split(",");
                 if (values.length >= 4) {

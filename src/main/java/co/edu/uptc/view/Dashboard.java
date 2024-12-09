@@ -226,7 +226,6 @@ public class Dashboard {
         loadButton.setOnAction(e -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Seleccionar archivo CSV");
-            System.out.println("Antes de elegir el archivo");
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Archivos CSV", "*.csv"));
             File file = fileChooser.showOpenDialog(null);
 
@@ -610,13 +609,10 @@ public class Dashboard {
         // Crear la vista del grafo con comunidades (supernodos)
         GraphView graphView = new GraphView();
         graphView.setGraph(graphController.getGraph());
-
-        System.out.println("Opcion: " + option);
+        
         if (option == 1) {
-            System.out.println("Comunidades de grafo");
             principal.setCenter(graphView.getGraphCommunity(nodeColors));
         } else if (option == 2) {
-            System.out.println("Comunidades con supernodos");
             principal.setCenter(graphView.getGraphCommunity(nodeColors, communities));
         }
     }
