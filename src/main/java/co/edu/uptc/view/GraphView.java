@@ -28,8 +28,8 @@ public class GraphView {
 
     public GraphView(Graph graph) {
         this.graph = graph;
+
     }
-    
 
     public static void setGraph(Graph graphData) {
         graph = graphData;
