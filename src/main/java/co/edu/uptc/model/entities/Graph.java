@@ -112,81 +112,83 @@ public class Graph {
 
     public int getShortestPathLength(Node source, Node target) {
         if (source.equals(target)) {
-            return 0;
+            return 0; 
         }
     
         Queue<Node> queue = new LinkedList<>();
         Map<Node, Integer> distances = new HashMap<>();
-        Set<Node> visited = new HashSet<>();
     
-        // Inicializar distancias
+      
         for (Node node : getNodes()) {
-            distances.put(node, Integer.MAX_VALUE);
+            distances.put(node, -1);
         }
     
         queue.add(source);
         distances.put(source, 0);
-        visited.add(source);
     
         while (!queue.isEmpty()) {
             Node current = queue.poll();
             int currentDistance = distances.get(current);
     
+           
             for (Node neighbor : getNeighbors(current)) {
-                if (!visited.contains(neighbor)) {
+                if (distances.get(neighbor) == -1) { 
                     distances.put(neighbor, currentDistance + 1);
-                    visited.add(neighbor);
                     queue.add(neighbor);
     
+                    
                     if (neighbor.equals(target)) {
-                        return distances.get(target); // Camino encontrado
+                        return distances.get(neighbor);
                     }
                 }
             }
         }
     
-        return Integer.MAX_VALUE; // No hay camino entre los nodos
+     
+        return -1;
     }
+    
+    
     public List<List<Node>> getAllShortestPaths(Node source, Node target) {
-        List<List<Node>> paths = new ArrayList<>();
-        if (source.equals(target)) {
-            List<Node> selfPath = new ArrayList<>();
-            selfPath.add(source);
-            paths.add(selfPath);
-            return paths;
-        }
-    
+        List<List<Node>> allPaths = new ArrayList<>();
         Queue<List<Node>> queue = new LinkedList<>();
-        List<Node> initialPath = new ArrayList<>();
-        initialPath.add(source);
-        queue.add(initialPath);
-    
-        int shortestDistance = Integer.MAX_VALUE;
+        Map<Node, Integer> shortestPathLengths = new HashMap<>();
+        
+        // Inicializa la cola con el nodo de origen
+        List<Node> startPath = new ArrayList<>();
+        startPath.add(source);
+        queue.add(startPath);
+        shortestPathLengths.put(source, 0);
     
         while (!queue.isEmpty()) {
-            List<Node> currentPath = queue.poll();
-            Node lastNode = currentPath.get(currentPath.size() - 1);
+            List<Node> path = queue.poll();
+            Node lastNode = path.get(path.size() - 1);
     
-            if (currentPath.size() > shortestDistance) {
-                continue; // Solo mantenemos los caminos más cortos
+            // Si llegamos al nodo objetivo, agrega la ruta
+            if (lastNode.equals(target)) {
+                allPaths.add(new ArrayList<>(path));
+                continue; // Sigue explorando otros caminos de igual longitud
             }
     
+            // Explora los vecinos del nodo actual
             for (Node neighbor : getNeighbors(lastNode)) {
-                if (!currentPath.contains(neighbor)) {
-                    List<Node> newPath = new ArrayList<>(currentPath);
-                    newPath.add(neighbor);
+                int currentPathLength = path.size();
     
-                    if (neighbor.equals(target)) {
-                        paths.add(newPath);
-                        shortestDistance = newPath.size();
-                    } else {
-                        queue.add(newPath);
-                    }
+                // Asegura que solo se exploren caminos más cortos o igual de largos
+                if (!shortestPathLengths.containsKey(neighbor) || 
+                    currentPathLength < shortestPathLengths.get(neighbor)) {
+                    
+                    shortestPathLengths.put(neighbor, currentPathLength);
+                    List<Node> newPath = new ArrayList<>(path);
+                    newPath.add(neighbor);
+                    queue.add(newPath);
                 }
             }
         }
     
-        return paths;
+        return allPaths;
     }
+    
+    
     
 }

@@ -53,7 +53,7 @@ public class Main extends Application {
         graphController.addEdge("4", "1", 50.0);
         graphController.addEdge("5", "1", 50.0);
         graphController.addEdge("6", "1", 50.0);
-        graphController.addEdge("2", "1", 50.0);
-        graphController.addEdge("7", "6", 50.0);
+        graphController.addEdge("7", "6", 50.0); 
     }
+    
 }
