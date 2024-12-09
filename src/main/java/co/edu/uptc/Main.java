@@ -7,14 +7,39 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
+    private static final String APP_TITLE = "Gestión de Grafos";
+
     public static void main(String[] args) {
         launch();
     }
 
     @Override
     public void start(Stage primaryStage) {
-        GraphController graphController = new GraphController();
+        try {
+            // Obtiene la instancia del controlador
+            GraphController graphController = GraphController.getInstance();
 
+            // Inicializa los datos del grafo
+            initializeGraph(graphController);
+
+            // Crea el dashboard
+            Dashboard dashboard = new Dashboard(graphController);
+
+            // Configura y muestra la ventana principal
+            primaryStage.setTitle(APP_TITLE);
+            primaryStage.setScene(dashboard.createScene());
+            primaryStage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Error al iniciar la aplicación: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Inicializa los nodos y aristas del grafo.
+     * @param graphController Controlador del grafo.
+     */
+    private void initializeGraph(GraphController graphController) {
         graphController.addNode("1", "Empresa1", "empresa");
         graphController.addNode("2", "Cliente1", "cliente");
         graphController.addEdge("1", "2", 100.0);
@@ -30,11 +55,5 @@ public class Main extends Application {
         graphController.addEdge("6", "1", 50.0);
         graphController.addEdge("2", "1", 50.0);
         graphController.addEdge("7", "6", 50.0);
-
-        Dashboard dashboard = new Dashboard(graphController);
-
-        primaryStage.setTitle("Gestión de Grafos");
-        primaryStage.setScene(dashboard.createScene());
-        primaryStage.show();
     }
 }

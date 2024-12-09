@@ -1,14 +1,15 @@
 module co.edu.uptc.proyactoprogramacioniii {
     requires javafx.controls;
-    requires javafx.graphics;
     requires javafx.fxml;
+    requires transitive javafx.graphics;
 
-    // Exportar los paquetes necesarios para ser utilizados por otros módulos
+    opens co.edu.uptc.controller to javafx.fxml;
+    opens co.edu.uptc.view to javafx.fxml;
+    opens co.edu.uptc.model.entities to javafx.fxml;
+    opens co.edu.uptc to javafx.graphics; // Abre el paquete principal para JavaFX
+
     exports co.edu.uptc.controller;
     exports co.edu.uptc.view;
     exports co.edu.uptc.model.entities;
-
-    opens co.edu.uptc.view to javafx.fxml;
-    exports co.edu.uptc;
-    opens co.edu.uptc to javafx.fxml;
+    exports co.edu.uptc; // Exporta el paquete principal para uso externo
 }

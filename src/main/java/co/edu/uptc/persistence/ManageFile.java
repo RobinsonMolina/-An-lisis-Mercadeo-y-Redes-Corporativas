@@ -5,6 +5,7 @@ import co.edu.uptc.model.entities.Graph;
 import co.edu.uptc.model.entities.Node;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -44,7 +45,7 @@ public class ManageFile {
     }
     
     public void saveGraphToCSV(Graph graph, String filePath) {
-        try (FileWriter writer = new FileWriter(filePath)) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             // Escribe la cabecera
             writer.append("Origen,Destino,Peso,Estado\n");
 

@@ -1,10 +1,9 @@
 Origen,Destino,Peso,Estado
-3,1,50,00,Persistente
-6,1,50,00,Persistente
 2,1,50,00,Persistente
 2,1,50,00,Persistente
-11,22,22222,00,Persistente
-5,1,50,00,Persistente
 1,2,100,00,Persistente
+6,1,50,00,Persistente
 7,6,50,00,Persistente
 4,1,50,00,Persistente
+3,1,50,00,Persistente
+5,1,50,00,Persistente

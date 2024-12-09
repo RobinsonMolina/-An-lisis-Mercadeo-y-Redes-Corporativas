@@ -8,16 +8,19 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import co.edu.uptc.model.entities.Node;
 
 import javafx.scene.control.TextField;
 
 import java.io.File;
+import java.util.Map;
 
 public class Dashboard {
 
@@ -70,7 +73,17 @@ public class Dashboard {
         comunityButton.setOnAction(e -> comunity());
         saleButton.setOnAction(e -> sale());
 
-        option.getChildren().addAll(menuTitle, new Separator(), createGraphButton, viewGraphButton, loadGraphButton);
+        option.getChildren().addAll(
+    menuTitle, 
+    new Separator(), 
+    createGraphButton, 
+    viewGraphButton, 
+    loadGraphButton, 
+    centralidadButton, 
+    comunityButton, 
+    saleButton
+);
+
         return option;
     }
 
@@ -129,7 +142,7 @@ public class Dashboard {
         BorderPane root = new BorderPane();
         if (graphController.getGraph() != null && !graphController.getGraph().getNodes().isEmpty()) {
             GraphView graphView = new GraphView();
-            graphView.setGraph(graphController.getGraph());
+            GraphController.getInstance().getGraph();
             principal.setCenter(graphView.getGraphContainer());
         } else {
             Label noDataLabel = new Label("No hay datos en el grafo.");
@@ -259,6 +272,7 @@ public class Dashboard {
     public void removeNode() {
         BorderPane removeNodePane = new BorderPane();
         VBox content = new VBox(10);
+        boolean result = false; 
         content.setPadding(new Insets(20));
         content.setAlignment(Pos.CENTER);
 
@@ -277,7 +291,7 @@ public class Dashboard {
                 return;
             }
 
-            boolean result = graphController.removeNode(nodeId);
+            GraphController.getInstance().removeNode(nodeId);
 
             if (result) {
                 showAlert(Alert.AlertType.INFORMATION, "Éxito", "Nodo eliminado correctamente.");
@@ -433,8 +447,49 @@ public class Dashboard {
     }
 
     private void centralidad() {
-        // Vista para centralidad
-    }
+    VBox centralityMenu = new VBox(10);
+    centralityMenu.setPadding(new Insets(20));
+    centralityMenu.setAlignment(Pos.CENTER);
+
+    Label title = new Label("Análisis de Centralidad");
+    title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+
+    Button degreeCentralityButton = new Button("Centralidad de Grado");
+    Button betweennessCentralityButton = new Button("Centralidad de Intermediación");
+    Button closenessCentralityButton = new Button("Centralidad de Cercanía");
+
+    TextArea resultsArea = new TextArea();
+    resultsArea.setEditable(false);
+    resultsArea.setPromptText("Resultados se mostrarán aquí...");
+
+    degreeCentralityButton.setOnAction(e -> {
+        Map<Node, Integer> degreeResults = graphController.calculateDegreeCentrality();
+        StringBuilder results = new StringBuilder("Centralidad de Grado:\n");
+        degreeResults.forEach((node, degree) -> 
+            results.append(node.getName()).append(": ").append(degree).append("\n"));
+        resultsArea.setText(results.toString());
+    });
+
+    betweennessCentralityButton.setOnAction(e -> {
+        Map<Node, Double> betweennessResults = graphController.calculateBetweennessCentrality();
+        StringBuilder results = new StringBuilder("Centralidad de Intermediación:\n");
+        betweennessResults.forEach((node, betweenness) -> 
+            results.append(node.getName()).append(": ").append(betweenness).append("\n"));
+        resultsArea.setText(results.toString());
+    });
+
+    closenessCentralityButton.setOnAction(e -> {
+        Map<Node, Double> closenessResults = graphController.calculateClosenessCentrality();
+        StringBuilder results = new StringBuilder("Centralidad de Cercanía:\n");
+        closenessResults.forEach((node, closeness) -> 
+            results.append(node.getName()).append(": ").append(closeness).append("\n"));
+        resultsArea.setText(results.toString());
+    });
+
+    centralityMenu.getChildren().addAll(title, degreeCentralityButton, betweennessCentralityButton, closenessCentralityButton, resultsArea);
+    principal.setCenter(centralityMenu);
+}
+
 
     private void comunity() {
         // Vista para comunidades
@@ -451,5 +506,6 @@ public class Dashboard {
         alert.setContentText(message);
         alert.showAndWait();
     }
+    
 
 }
