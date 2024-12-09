@@ -45,17 +45,14 @@ public class ManageFile {
     
     public void saveGraphToCSV(Graph graph, String filePath) {
         try (FileWriter writer = new FileWriter(filePath)) {
-            // Escribe la cabecera
-            writer.append("Origen,Destino,Peso,Estado\n");
+            writer.append("Origen,Destino,Tipo,Peso\n");
 
-            // Escribe las aristas
             for (Edge edge : graph.getEdges()) {
                 String source = edge.getSource().getId();
                 String target = edge.getTarget().getId();
+                String type = edge.getSource().getType(); 
                 double weight = edge.getWeight();
-                String status = edge.isDeleted() ? "Eliminado" : "Persistente";
-
-                writer.append(String.format("%s,%s,%.2f,%s\n", source, target, weight, status));
+                writer.append(String.format("%s,%s,%s,%.2f\n", source, target, type, weight));
             }
 
             System.out.println("Grafo guardado exitosamente en " + filePath);
@@ -63,4 +60,5 @@ public class ManageFile {
             System.out.println("Error al guardar el archivo CSV: " + e.getMessage());
         }
     }
+
 }
