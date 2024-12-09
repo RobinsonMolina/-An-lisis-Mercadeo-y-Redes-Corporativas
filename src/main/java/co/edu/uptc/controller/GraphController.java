@@ -119,41 +119,60 @@ public class GraphController {
     }
 
 	public Map<Node, Double> calculateBetweennessCentrality() {
-        Map<Node, Double> betweennessCentrality = new HashMap<>();
-        graph.getNodes().forEach(node -> betweennessCentrality.put(node, 0.0));
+        Map<Node, Double> centrality = new HashMap<>();
+        for (Node node : getNodes()) {
+            centrality.put(node, 0.0);
+        }
     
-        for (Node source : graph.getNodes()) {
-            for (Node target : graph.getNodes()) {
+        for (Node source : getNodes()) {
+            for (Node target : getNodes()) {
                 if (!source.equals(target)) {
-                    List<List<Node>> shortestPaths = graph.getAllShortestPaths(source, target);
-    
-                    for (Node node : graph.getNodes()) {
-                        if (!node.equals(source) && !node.equals(target)) {
-                            long countPathsThroughNode = shortestPaths.stream()
-                                    .filter(path -> path.contains(node))
-                                    .count();
-                            long totalPaths = shortestPaths.size();
-    
-                            double currentBetweenness = betweennessCentrality.get(node);
-                            betweennessCentrality.put(node, currentBetweenness + ((double) countPathsThroughNode / totalPaths));
+                    List<List<Node>> paths = getAllShortestPaths(source, target);
+                    if (paths != null && !paths.isEmpty()) {
+                        int totalPaths = paths.size();
+                        Map<Node, Integer> nodeCounts = new HashMap<>();
+                        for (List<Node> path : paths) {
+                            for (Node intermediate : path) {
+                                if (!intermediate.equals(source) && !intermediate.equals(target)) {
+                                    nodeCounts.put(intermediate, nodeCounts.getOrDefault(intermediate, 0) + 1);
+                                }
+                            }
+                        }
+                        for (Node intermediate : nodeCounts.keySet()) {
+                            double score = centrality.get(intermediate);
+                            score += (double) nodeCounts.get(intermediate) / totalPaths;
+                            centrality.put(intermediate, score);
                         }
                     }
                 }
             }
         }
     
-        return betweennessCentrality;
+        return centrality;
     }
+
+    public Set<Node> getNodes() {
+        return graph.getNodes(); // `graph` es la instancia de la clase Graph dentro de GraphController
+    }
+    
+    public List<List<Node>> getAllShortestPaths(Node source, Node target) {
+        return graph.getAllShortestPaths(source, target); // `graph` es la instancia de Graph en GraphController
+    }
+    
     
     
     public Map<Node, Integer> calculateDegreeCentrality() {
         Map<Node, Integer> degreeCentrality = new HashMap<>();
-    
-        graph.getNodes().forEach(node -> {
-            int degree = graph.getNeighbors(node).size();
-            degreeCentrality.put(node, degree);
-        });
-    
+        for (Node node : graph.getNodes()) {
+            // Conexiones salientes
+            int outDegree = graph.getNeighbors(node).size();
+            // Conexiones entrantes
+            int inDegree = (int) graph.getEdges().stream()
+                    .filter(edge -> edge.getTarget().equals(node))
+                    .count();
+            // Suma de conexiones entrantes y salientes
+            degreeCentrality.put(node, outDegree + inDegree);
+        }
         return degreeCentrality;
     }
     
@@ -162,17 +181,22 @@ public class GraphController {
     
         for (Node node : graph.getNodes()) {
             double totalDistance = 0.0;
+            int reachableNodes = 0;
     
             for (Node otherNode : graph.getNodes()) {
                 if (!node.equals(otherNode)) {
                     int distance = graph.getShortestPathLength(node, otherNode);
-                    totalDistance += distance;
+    
+                    if (distance > 0) { // Ignoramos distancias negativas o nodos no alcanzables
+                        totalDistance += distance;
+                        reachableNodes++;
+                    }
                 }
             }
     
-            // La centralidad es inversa a la distancia total
-            if (totalDistance > 0) {
-                closenessCentrality.put(node, 1.0 / totalDistance);
+            // Calcular la centralidad si hay nodos alcanzables
+            if (reachableNodes > 0 && totalDistance > 0) {
+                closenessCentrality.put(node, (double) reachableNodes / totalDistance);
             } else {
                 closenessCentrality.put(node, 0.0); // Nodo aislado
             }
@@ -180,6 +204,9 @@ public class GraphController {
     
         return closenessCentrality;
     }
+    
+    
+    
     
     
     
