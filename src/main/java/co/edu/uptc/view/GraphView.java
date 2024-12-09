@@ -18,10 +18,16 @@ import java.util.Random;
 public class GraphView {
 
     private static Graph graph;
+    
+    public GraphView(Graph graph) {
+        this.graph = graph;
+    }
 
     public static void setGraph(Graph graphData) {
         graph = graphData;
     }
+    
+   
 
     public ScrollPane getGraphContainer() {
         Pane pane = new Pane();
