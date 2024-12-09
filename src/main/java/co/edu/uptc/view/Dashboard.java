@@ -35,8 +35,10 @@ public class Dashboard {
     private VBox option;
     private VBox menu;
     private HBox hIcon;
+    private VBox communityOptions;
     private BorderPane root;
     private BorderPane principal;
+    private Button comunityButton;
 
     public Dashboard(GraphController graphController) {
         this.graphController = graphController;
@@ -47,6 +49,7 @@ public class Dashboard {
         menu = new VBox();
         option = new VBox(10);
         hIcon = new HBox();
+        communityOptions = new VBox();
         root = new BorderPane();
 
         createMenu();
@@ -70,18 +73,32 @@ public class Dashboard {
         Button viewGraphButton = new Button("Ver grafo");
         Button loadGraphButton = new Button("Cargar grafo");
         Button centralidadButton = new Button("Centralidad");
-        Button comunityButton = new Button("Comunidades");
+        comunityButton = new Button("Comunidades");
         Button saleButton = new Button("Ventas");
 
+        Button communityUnoButton = new Button("Comunidades de Grafo");
+        Button superCommunityButton = new Button("Comunidades con supernodos");
+
+        comunityButton.setOnAction(e -> toggleCommunityOptions());
+        // Crear contenedor y ocultarlo inicialmente
+        communityOptions = new VBox(5, communityUnoButton, superCommunityButton);
+        communityOptions.setPadding(new Insets(10));
+        communityOptions.setAlignment(Pos.CENTER_LEFT);
+        communityOptions.setVisible(false);
+        communityOptions.setManaged(false); // Ocultar completamente del layout
+        comunityButton.setOnAction(e -> toggleCommunityOptions());
+
+        communityUnoButton.setOnAction(e -> comunity(1));
+        superCommunityButton.setOnAction(e -> comunity(2));
         createGraphButton.setOnAction(e -> showCreateGraphMenu());
         viewGraphButton.setOnAction(e -> viewGraph());
         loadGraphButton.setOnAction(e -> loadGraph());
         centralidadButton.setOnAction(e -> centralidad());
-        comunityButton.setOnAction(e -> comunity());
         saleButton.setOnAction(e -> sale());
 
-        option.getChildren().addAll(menuTitle, new Separator(), createGraphButton, viewGraphButton, loadGraphButton,
-                centralidadButton, comunityButton, saleButton);
+        option.getChildren().addAll(
+                menuTitle, new Separator(), createGraphButton, viewGraphButton, loadGraphButton,
+                centralidadButton, comunityButton, communityOptions, saleButton);
         return option;
     }
 
@@ -98,6 +115,12 @@ public class Dashboard {
 
         hIcon.getChildren().add(menuIcon);
         return hIcon;
+    }
+
+    private void toggleCommunityOptions() {
+        boolean isVisible = communityOptions.isVisible();
+        communityOptions.setVisible(!isVisible);
+        communityOptions.setManaged(!isVisible);
     }
 
     private void showCreateGraphMenu() {
@@ -452,7 +475,7 @@ public class Dashboard {
      * }
      */
 
-    private void comunity() {
+    private void comunity(int option) {
         // Detectar comunidades
         List<Set<Node>> communities = graphController.detectCommunities();
         Map<Node, Color> nodeColors = new HashMap<>();
@@ -470,7 +493,14 @@ public class Dashboard {
         GraphView graphView = new GraphView();
         graphView.setGraph(graphController.getGraph());
 
-        principal.setCenter(graphView.getGraphCommunity(nodeColors, communities));
+        System.out.println("Opcion: " + option);
+        if (option == 1) {
+            System.out.println("Comunidades de grafo");
+            principal.setCenter(graphView.getGraphCommunity(nodeColors));
+        } else if (option == 2) {
+            System.out.println("Comunidades con supernodos");
+            principal.setCenter(graphView.getGraphCommunity(nodeColors, communities));
+        }
     }
 
     private void sale() {
