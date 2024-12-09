@@ -395,8 +395,13 @@ public class Dashboard {
                 return;
             }
 
+            double weight;
             try {
-                double weight = Double.parseDouble(weightText);
+                weight = Double.parseDouble(weightText);
+                if (weight <= 0) {
+                    showAlert(Alert.AlertType.ERROR, "Error", "El peso no puede ser negativo.");
+                    return;
+                }
                 graphController.addEdge(sourceId, targetId, weight);
                 showAlert(Alert.AlertType.INFORMATION, "Éxito", "Arista agregada correctamente.");
             } catch (NumberFormatException ex) {
@@ -575,7 +580,10 @@ public class Dashboard {
 
             try {
                 double newWeight = Double.parseDouble(weightText);
-
+                if (newWeight <= 0) {
+                    showAlert(Alert.AlertType.ERROR, "Error", "El peso no puede ser negativo.");
+                    return;
+                }
                 boolean result = graphController.updateEdge(sourceId, targetId, newWeight);
 
                 if (result) {
