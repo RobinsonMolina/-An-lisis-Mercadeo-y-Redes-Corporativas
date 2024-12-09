@@ -51,7 +51,7 @@ public class Dashboard {
         communityOptions = new VBox();
 
         createMenu();
-        //createMenuToggleButton();
+        // createMenuToggleButton();
 
         menu.getChildren().addAll(option);
 
@@ -201,6 +201,8 @@ public class Dashboard {
     }
 
     private void viewGraph() {
+        long startTime = System.nanoTime();
+
         if (graphController.getGraph() != null && !graphController.getGraph().getNodes().isEmpty()) {
             GraphView graphView = new GraphView(graphController.getGraph());
             graphView.getGraphContainer().setStyle("-fx-background-color: #f0f8ff;");
@@ -215,6 +217,14 @@ public class Dashboard {
             noDataArea.setStyle("-fx-background-color: #f0f8ff;");
             principal.setCenter(noDataArea);
         }
+
+        long endTime = System.nanoTime();
+        long durationNano = endTime - startTime;
+
+        long seconds = durationNano / 1_000_000_000;
+        long milliseconds = (durationNano % 1_000_000_000) / 1_000_000;
+
+        System.out.println("Tiempo de graficado: " + seconds + " segundos y " + milliseconds + " milisegundos.");
     }
 
     private void loadGraph() {
@@ -339,12 +349,12 @@ public class Dashboard {
             } else if (sourceId.equalsIgnoreCase(targetId)) {
                 showAlert(Alert.AlertType.ERROR, "Error", "No se puede crear una relacion con la misma entidad");
                 return;
-            }else if(!graphController.isNodePresentById(sourceId)) {
-            	showAlert(Alert.AlertType.ERROR, "Error", "El ID del nodo fuente no se encuentra registrado.");
-            	return;
-            }else if(!graphController.isNodePresentById(weightText)) {
-            	showAlert(Alert.AlertType.ERROR, "Error", "El ID del nodo destino no se encuentra registrado.");
-            	return;
+            } else if (!graphController.isNodePresentById(sourceId)) {
+                showAlert(Alert.AlertType.ERROR, "Error", "El ID del nodo fuente no se encuentra registrado.");
+                return;
+            } else if (!graphController.isNodePresentById(weightText)) {
+                showAlert(Alert.AlertType.ERROR, "Error", "El ID del nodo destino no se encuentra registrado.");
+                return;
             }
 
             double weight;
@@ -615,7 +625,7 @@ public class Dashboard {
         // Crear la vista del grafo con comunidades (supernodos)
         GraphView graphView = new GraphView();
         graphView.setGraph(graphController.getGraph());
-        
+
         if (option == 1) {
             principal.setCenter(graphView.getGraphCommunity(nodeColors));
         } else if (option == 2) {
@@ -695,26 +705,25 @@ public class Dashboard {
 
     private void showReport() {
         String report = graphController.generateCommunityReport();
-    
+
         TextArea textArea = new TextArea(report);
         textArea.setEditable(false);
         textArea.setWrapText(true);
         textArea.setStyle("-fx-font-size: 14px; -fx-background-color: #f0f8ff; -fx-padding: 10;");
-    
+
         ScrollPane scrollPane = new ScrollPane(textArea);
-        scrollPane.setFitToWidth(true); 
-        scrollPane.setFitToHeight(true); 
-        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED); 
-        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED); 
-    
+        scrollPane.setFitToWidth(true);
+        scrollPane.setFitToHeight(true);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+
         BorderPane reportLayout = new BorderPane();
         reportLayout.setCenter(scrollPane);
 
         principal.setCenter(reportLayout);
 
-        BorderPane.setMargin(scrollPane, new Insets(10)); 
+        BorderPane.setMargin(scrollPane, new Insets(10));
     }
-    
 
     private void showAlert(Alert.AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType);
