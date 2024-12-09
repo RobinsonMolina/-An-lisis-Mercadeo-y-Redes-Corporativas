@@ -55,9 +55,9 @@ public class Dashboard {
         root = new BorderPane();
 
         createMenu();
-        createMenuToggleButton();
+        //createMenuToggleButton();
 
-        menu.getChildren().addAll(hIcon, option);
+        menu.getChildren().addAll(option);
 
         principal.setLeft(menu);
         return new Scene(principal, 800, 600);
@@ -68,7 +68,7 @@ public class Dashboard {
         option.setStyle("-fx-background-color: #f0f8ff;");
         option.setPrefWidth(200);
         option.setPrefHeight(600);
-        option.setAlignment(Pos.CENTER);
+        option.setAlignment(Pos.TOP_LEFT);
 
         Label menuTitle = new Label("Menú");
         menuTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
@@ -148,7 +148,7 @@ public class Dashboard {
         return button;
     }
 
-    private HBox createMenuToggleButton() {
+    /*private HBox createMenuToggleButton() {
         hIcon.setPadding(new Insets(5));
         hIcon.setAlignment(Pos.CENTER_LEFT);
         hIcon.setStyle("-fx-background-color: #f0f8ff;");
@@ -164,7 +164,7 @@ public class Dashboard {
 
         hIcon.getChildren().add(menuIcon);
         return hIcon;
-    }
+    }*/
 
     private void toggleCommunityOptions() {
         boolean isVisible = communityOptions.isVisible();
