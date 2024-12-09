@@ -1,14 +1,6 @@
 package co.edu.uptc.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
-
+import co.edu.uptc.model.entities.Edge;
 import co.edu.uptc.model.entities.Graph;
 import co.edu.uptc.model.entities.Node;
 import co.edu.uptc.persistence.ManageFile;
@@ -37,7 +29,6 @@ public class GraphController {
         manageFile.saveGraphToCSV(graph, resourcePath);
     }
 
-
     public void loadGraphFromCSV(String filePath) {
         this.graph = manageFile.loadGraphFromCSV(filePath);
     }
@@ -50,6 +41,11 @@ public class GraphController {
 
     // Método para agregar una arista
     public void addEdge(String sourceId, String targetId, double weight) {
+        if (!verifyIdNode(sourceId, targetId)) {
+            System.out.println("Error: Nodo fuente o destino no válido.");
+            return;
+        }
+
         Node source = findNodeById(sourceId);
         Node target = findNodeById(targetId);
 
@@ -61,6 +57,11 @@ public class GraphController {
         }
     }
 
+    private boolean verifyIdNode(String sourceId, String targetId) {
+        return isNodePresentById(sourceId) && isNodePresentById(targetId);
+    }
+
+
     private Node findNodeById(String id) {
         return graph.getNodes().stream().filter(n -> n.getId().equals(id)).findFirst().orElse(null);
     }
@@ -68,10 +69,6 @@ public class GraphController {
     public boolean isNodePresentById(String id) {
         return graph.getNodes().stream().anyMatch(n -> n.getId().equals(id));
     }
-
-
-
-
 
     // Verificar si un ID de nodo ya está registrado
     public boolean isNodeIdAlreadyRegistered(String id) {
@@ -89,6 +86,7 @@ public class GraphController {
         if (node != null) {
             graph.removeNode(node);
             saveGraph();
+            return true;
         } else {
             System.out.println("Error: Nodo no encontrado.");
         }
@@ -102,6 +100,7 @@ public class GraphController {
 
         if (source != null && target != null) {
             graph.removeEdge(source, target);
+            saveGraph();
         } else {
             System.out.println("Error: Nodo fuente o destino no encontrado.");
         }
@@ -115,7 +114,7 @@ public class GraphController {
         } else {
             System.out.println("Error: Nodo no encontrado.");
         }
-                return false;
+        return false;
     }
 
     // Actualizar una arista
@@ -135,7 +134,7 @@ public class GraphController {
         return graph;
     }
 
-	public Map<Node, Double> calculateBetweennessCentrality() {
+    public Map<Node, Double> calculateBetweennessCentrality() {
         Map<Node, Double> centrality = new HashMap<>();
         for (Node node : getNodes()) {
             centrality.put(node, 0.0);
@@ -175,8 +174,6 @@ public class GraphController {
     public List<List<Node>> getAllShortestPaths(Node source, Node target) {
         return graph.getAllShortestPaths(source, target); // `graph` es la instancia de Graph en GraphController
     }
-
-
 
     public Map<Node, Integer> calculateDegreeCentrality() {
         Map<Node, Integer> degreeCentrality = new HashMap<>();
@@ -222,13 +219,6 @@ public class GraphController {
         return closenessCentrality;
     }
 
-
-
-
-
-
-
-
     public List<Set<Node>> detectCommunities() {
         Map<Node, Integer> communityMap = new HashMap<>();
         int communityId = 0;
@@ -267,4 +257,158 @@ public class GraphController {
             }
         }
     }
+
+    public String generateCommunityReport() {
+        StringBuilder report = new StringBuilder();
+
+        List<Set<Node>> communities = detectCommunities();
+
+        double maxCommunitySales = 0;
+        double minCommunitySales = Double.MAX_VALUE;
+        double maxSales = 0;
+        double minSales = Double.MAX_VALUE;
+
+        String mostSalesCommunity = "";
+        String leastSalesCommunity = "";
+        String mostSalesCompany = "";
+        String leastSalesCompany = "";
+
+
+        for (Set<Node> community : communities) {
+            double totalCommunitySales = 0; 
+            String communityName = "Comunidad " + communities.indexOf(community);
+
+            for (Node node : community) {
+                double companySales = getCompanySales(node); 
+                totalCommunitySales += companySales;
+                String companyName = node.getName();
+
+                // Verificar la empresa con más ventas
+                if (companySales > maxSales) {
+                    mostSalesCompany = companyName;
+                    maxSales = companySales;
+                }
+
+                // Verificar la empresa con menos ventas
+                if (companySales < minSales) {
+                    leastSalesCompany = companyName;
+                    minSales = companySales;
+                }
+            }
+
+            // Verificar la comunidad con más ventas
+            if (totalCommunitySales > maxCommunitySales) {
+                mostSalesCommunity = communityName;
+                maxCommunitySales = totalCommunitySales;
+            }
+
+            // Verificar la comunidad con menos ventas
+            if (totalCommunitySales < minCommunitySales) {
+                leastSalesCommunity = communityName;
+                minCommunitySales = totalCommunitySales;
+            }
+        }
+
+        report.append("\n                                                              Informe\n\n");
+
+        // Comunidades
+        report.append("\nComunidades\n\n");
+        report.append("La comunidad con más ventas es ").append(mostSalesCommunity)
+                .append(" con ventas totales de ").append(maxCommunitySales).append(".\n");
+        report.append("La comunidad con menos ventas es ").append(leastSalesCommunity)
+                .append(" con ventas totales de ").append(minCommunitySales).append(".\n\n");
+
+        // Empresas
+        report.append("\nEmpresas\n\n");
+        report.append("La empresa que más vendió es ").append(mostSalesCompany)
+                .append(" con ventas de ").append(maxSales).append(".\n");
+        report.append("La empresa que menos vendió es ").append(leastSalesCompany)
+                .append(" con ventas de ").append(minSales).append(".\n");
+
+        // Análisis
+        report.append("\nAnálisis:\n");
+        report.append(getRandomAnalysis(mostSalesCommunity, maxCommunitySales, leastSalesCommunity, minCommunitySales,
+                mostSalesCompany, maxSales, leastSalesCompany, minSales));
+
+        // Recomendación aleatoria
+        report.append("\nRecomendaciones:\n");
+        report.append(getRandomRecommendation());
+
+        return report.toString();
+    }
+
+    private String getRandomAnalysis(String mostSalesCommunity, double maxCommunitySales, String leastSalesCommunity,
+            double minCommunitySales, String mostSalesCompany, double maxSales, String leastSalesCompany,
+            double minSales) {
+        String[] analysis = {
+                "Análisis: La comunidad con más ventas, " + mostSalesCommunity + " (Ventas: " + maxCommunitySales
+                        + "), tiene un rendimiento destacado debido a su sólida estrategia de marketing y el alto nivel de cooperación entre sus empresas. Por otro lado, "
+                        + leastSalesCommunity + " (Ventas: " + minCommunitySales
+                        + ") podría estar experimentando bajas ventas debido a la falta de innovación o el desinterés del mercado. En cuanto a las empresas, "
+                        + mostSalesCompany + " ha destacado con ventas de " + maxSales
+                        + " gracias a su enfoque centrado en las necesidades del cliente, mientras que "
+                        + leastSalesCompany + " (Ventas: " + minSales
+                        + ") podría necesitar revisar sus productos o canales de distribución.",
+                "Análisis: La comunidad " + mostSalesCommunity + " (Ventas: " + maxCommunitySales
+                        + ") ha mostrado un crecimiento sostenido debido a la adopción de nuevas tecnologías o alianzas estratégicas entre sus empresas. En contraste, "
+                        + leastSalesCommunity + " (Ventas: " + minCommunitySales
+                        + ") parece estar estancada, lo que podría ser el resultado de una competencia agresiva en el mercado o una falta de actualización en sus estrategias. "
+                        + mostSalesCompany + " ha logrado posicionarse en el mercado con ventas de " + maxSales
+                        + " debido a su diferenciación, mientras que " + leastSalesCompany + " (Ventas: " + minSales
+                        + ") necesita reevaluar su propuesta de valor.",
+                "Análisis: A pesar de que " + mostSalesCommunity + " (Ventas: " + maxCommunitySales
+                        + ") ha logrado resultados excepcionales, " + leastSalesCommunity + " (Ventas: "
+                        + minCommunitySales
+                        + ") está mostrando signos de debilidad. Esto podría deberse a factores externos como cambios en el mercado o una falta de recursos adecuados. "
+                        + mostSalesCompany + " (Ventas: " + maxSales
+                        + ") se ha beneficiado de una expansión eficiente, mientras que " + leastSalesCompany
+                        + " (Ventas: " + minSales
+                        + ") puede estar enfrentando problemas internos que afectan su capacidad para generar ingresos.",
+                "Análisis: " + mostSalesCommunity + " (Ventas: " + maxCommunitySales
+                        + ") ha logrado grandes ventas debido a su capacidad para adaptarse rápidamente a las demandas del mercado. Por otro lado, "
+                        + leastSalesCommunity + " (Ventas: " + minCommunitySales
+                        + ") podría estar en declive por una posible saturación del mercado o un enfoque deficiente en la fidelización de clientes. "
+                        + mostSalesCompany + " (Ventas: " + maxSales
+                        + ") es líder en su sector gracias a su enfoque constante en la calidad, mientras que "
+                        + leastSalesCompany + " (Ventas: " + minSales
+                        + ") necesita implementar cambios drásticos para evitar una caída prolongada.",
+                "Análisis: " + mostSalesCommunity + " (Ventas: " + maxCommunitySales
+                        + ") ha sido exitosa debido a su enfoque integral, mientras que " + leastSalesCommunity
+                        + " (Ventas: " + minCommunitySales
+                        + ") podría beneficiarse de una mayor integración entre sus miembros. En cuanto a las empresas, "
+                        + mostSalesCompany + " (Ventas: " + maxSales
+                        + ") ha logrado maximizar su rendimiento, mientras que " + leastSalesCompany + " (Ventas: "
+                        + minSales
+                        + ") enfrenta dificultades que podrían ser resueltas con un cambio en sus tácticas de ventas o en su estrategia de producto."
+        };
+        Random rand = new Random();
+        int randomIndex = rand.nextInt(analysis.length);
+
+        return analysis[randomIndex] + "\n\n";
+    }
+
+    private String getRandomRecommendation() {
+        String[] recommendations = {
+                "Recomendación: Enfoque en la comunidad con menos ventas. Investigar las razones detrás de sus bajas ventas y mejorar la estrategia de marketing en esa comunidad.",
+                "Recomendación: Las comunidades con ventas equilibradas pueden beneficiarse de un análisis más profundo sobre el comportamiento de los clientes. Se recomienda optimizar las operaciones de ventas de manera uniforme.",
+                "Recomendación: Fomentar la colaboración entre las empresas de la comunidad que más vendió. Crear estrategias de alianzas para maximizar el impacto en el mercado.",
+                "Recomendación: La empresa con menos ventas debería ser objetivo de un análisis más detallado sobre sus productos y mercados, y se le debería dar soporte adicional en términos de recursos de ventas.",
+                "Recomendación: Se sugiere realizar promociones para las comunidades con menos ventas, con el fin de aumentar la visibilidad y el interés en los productos que ofrecen."
+        };
+
+        Random rand = new Random();
+        int randomIndex = rand.nextInt(recommendations.length);
+
+        return recommendations[randomIndex];
+    }
+
+    private double getCompanySales(Node node) {
+        double totalSales = 0;
+
+        for (Edge edge : graph.getEdgesFromNode(node)) {
+            totalSales += edge.getWeight();
+        }
+        return totalSales;
+    }
+
 }

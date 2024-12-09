@@ -11,11 +11,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Separator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -41,9 +36,7 @@ public class Dashboard {
     private GraphController graphController;
     private VBox option;
     private VBox menu;
-    private HBox hIcon;
     private VBox communityOptions;
-    private BorderPane root;
     private BorderPane principal;
     private Button comunityButton;
 
@@ -55,14 +48,12 @@ public class Dashboard {
         principal = new BorderPane();
         menu = new VBox();
         option = new VBox(10);
-        hIcon = new HBox();
         communityOptions = new VBox();
-        root = new BorderPane();
 
         createMenu();
-        createMenuToggleButton();
+        //createMenuToggleButton();
 
-        menu.getChildren().addAll(hIcon, option);
+        menu.getChildren().addAll(option);
 
         principal.setLeft(menu);
         return new Scene(principal, 800, 600);
@@ -73,7 +64,7 @@ public class Dashboard {
         option.setStyle("-fx-background-color: #f0f8ff;");
         option.setPrefWidth(200);
         option.setPrefHeight(600);
-        option.setAlignment(Pos.CENTER);
+        option.setAlignment(Pos.TOP_LEFT);
 
         Label menuTitle = new Label("Menú");
         menuTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
@@ -86,8 +77,6 @@ public class Dashboard {
         Button saleButton = createStyledButton("Similitud de Empresas");
         Button productBundleButton = createStyledButton("Similitud de Productos");
         Button report = createStyledButton("Informe");
-
-
 
         Button communityUnoButton = new Button("Comunidades de Grafo");
         Button superCommunityButton = new Button("Comunidades con supernodos");
@@ -109,81 +98,50 @@ public class Dashboard {
         viewGraphButton.setOnAction(e -> viewGraph());
         loadGraphButton.setOnAction(e -> loadGraph());
         centralidadButton.setOnAction(e -> centralidad());
-        //comunityButton.setOnAction(e -> comunity());
+        // comunityButton.setOnAction(e -> comunity());
         saleButton.setOnAction(e -> sale());
         productBundleButton.setOnAction(e -> showFrequentProductBundles());
         report.setOnAction(e -> showReport());
-        
-
 
         option.getChildren().addAll(
-            menuTitle,
-            new Separator(),
-            createGraphButton,
-            viewGraphButton,
-            loadGraphButton,
-            centralidadButton,
-            comunityButton,
+                menuTitle,
+                new Separator(),
+                createGraphButton,
+                viewGraphButton,
+                loadGraphButton,
+                centralidadButton,
+                comunityButton,
                 communityOptions,
-            saleButton,
-            productBundleButton,
-            report
-        );
+                saleButton,
+                productBundleButton,
+                report);
         return option;
     }
 
-    private void showReport() {
-		
-	}
-
-	private Button createStyledButton(String text) {
+    private Button createStyledButton(String text) {
         Button button = new Button(text);
         button.setStyle(
-            "-fx-font-size: 12px; " +
-            "-fx-font-weight: bold; " +
-            "-fx-background-color: #4CAF50; " +
-            "-fx-text-fill: white; " +
-            "-fx-background-radius: 5px; " +
-            "-fx-padding: 10;"
-        );
+                "-fx-font-size: 12px; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-background-color: #4CAF50; " +
+                        "-fx-text-fill: white; " +
+                        "-fx-background-radius: 5px; " +
+                        "-fx-padding: 10;");
         button.setOnMouseEntered(e -> button.setStyle(
-            "-fx-font-size: 12px; " +
-            "-fx-font-weight: bold; " +
-            "-fx-background-color: #45a049; " +
-            "-fx-text-fill: white; " +
-            "-fx-background-radius: 5px; " +
-            "-fx-padding: 10;"
-        ));
+                "-fx-font-size: 12px; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-background-color: #45a049; " +
+                        "-fx-text-fill: white; " +
+                        "-fx-background-radius: 5px; " +
+                        "-fx-padding: 10;"));
         button.setOnMouseExited(e -> button.setStyle(
-            "-fx-font-size: 12px; " +
-            "-fx-font-weight: bold; " +
-            "-fx-background-color: #4CAF50; " +
-            "-fx-text-fill: white; " +
-            "-fx-background-radius: 5px; " +
-            "-fx-padding: 10;"
-        ));
+                "-fx-font-size: 12px; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-background-color: #4CAF50; " +
+                        "-fx-text-fill: white; " +
+                        "-fx-background-radius: 5px; " +
+                        "-fx-padding: 10;"));
         return button;
-    }
-
-
-    private HBox createMenuToggleButton() {
-        hIcon.setPadding(new Insets(5));
-        hIcon.setAlignment(Pos.CENTER_LEFT);
-        hIcon.setStyle("-fx-background-color: #f0f8ff;");
-
-        //ImageView menuIcon = new ImageView(getClass().getResource("/Icon.png").toExternalForm());
-        ImageView menuIcon = new ImageView(getClass().getResource("/Icon.png").toExternalForm());
-
-
-
-        menuIcon.setFitWidth(24);
-        menuIcon.setFitHeight(24);
-
-        menuIcon.setOnMouseClicked(e -> option.setVisible(!option.isVisible()));
-        
-
-        hIcon.getChildren().add(menuIcon);
-        return hIcon;
     }
 
     private void toggleCommunityOptions() {
@@ -193,7 +151,6 @@ public class Dashboard {
     }
 
     private void showCreateGraphMenu() {
-        BorderPane root = new BorderPane();
         VBox createGraphArea = new VBox(10);
         createGraphArea.setPadding(new Insets(20));
         createGraphArea.setAlignment(Pos.CENTER);
@@ -232,24 +189,21 @@ public class Dashboard {
     private Button createStyledButton(String text, String color) {
         Button button = new Button(text);
         button.setStyle(
-            "-fx-font-size: 14px;" +
-            "-fx-font-weight: bold;" +
-            "-fx-text-fill: white;" +
-            "-fx-background-color: " + color + ";" +
-            "-fx-background-radius: 5;" +
-            "-fx-border-radius: 5;" +
-            "-fx-padding: 10;"
-        );
+                "-fx-font-size: 14px;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-text-fill: white;" +
+                        "-fx-background-color: " + color + ";" +
+                        "-fx-background-radius: 5;" +
+                        "-fx-border-radius: 5;" +
+                        "-fx-padding: 10;");
         button.setPrefWidth(200); // Establecer un ancho fijo para los botones
         return button;
     }
 
     private void viewGraph() {
-        System.out.println("viewGraph");
-        BorderPane root = new BorderPane();
         if (graphController.getGraph() != null && !graphController.getGraph().getNodes().isEmpty()) {
-        	GraphView graphView = new GraphView(graphController.getGraph());
-        	graphView.getGraphContainer().setStyle("-fx-background-color: #f0f8ff;");
+            GraphView graphView = new GraphView(graphController.getGraph());
+            graphView.getGraphContainer().setStyle("-fx-background-color: #f0f8ff;");
             GraphController.getInstance().getGraph();
             principal.setCenter(graphView.getGraphContainer());
         } else {
@@ -263,9 +217,7 @@ public class Dashboard {
         }
     }
 
-
     private void loadGraph() {
-        System.out.println("Entro al método");
         BorderPane root = new BorderPane();
         Label loadGraphLabel = new Label("Cargar Grafo");
         loadGraphLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
@@ -297,9 +249,7 @@ public class Dashboard {
         principal.setCenter(root);
     }
 
-
     public void addNode() {
-        System.out.println("Cargando la vista para agregar nodo...");
         BorderPane addNodePane = new BorderPane();
         VBox content = new VBox(10);
         content.setPadding(new Insets(20));
@@ -327,11 +277,11 @@ public class Dashboard {
 
             if (id.isEmpty() || name.isEmpty() || type.isEmpty()) {
                 showAlert(Alert.AlertType.ERROR, "Error", "Todos los campos deben ser completados.");
-            }else if (graphController.isNodeIdAlreadyRegistered(id)) {
+            } else if (graphController.isNodeIdAlreadyRegistered(id)) {
                 showAlert(Alert.AlertType.ERROR, "Error", "El ID del nodo ya ha sido registrado.");
             } else if (graphController.isNodeNameAlreadyRegistered(name)) {
                 showAlert(Alert.AlertType.ERROR, "Error", "El nombre del nodo ya ha sido registrado.");
-            }else {
+            } else {
                 graphController.addNode(id, name, type);
                 showAlert(Alert.AlertType.INFORMATION, "Éxito", "Nodo agregado correctamente.");
             }
@@ -343,25 +293,22 @@ public class Dashboard {
     }
 
     private void styleButton(Button button) {
-    	button.setStyle(
-    		    "-fx-background-color: #2196F3; " +
-    		    "-fx-text-fill: white; " +
-    		    "-fx-font-weight: bold; " +
-    		    "-fx-background-radius: 5;"
-    		);
-	}
+        button.setStyle(
+                "-fx-background-color: #2196F3; " +
+                        "-fx-text-fill: white; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-background-radius: 5;");
+    }
 
     private void styleButtonDelete(Button button) {
-    	button.setStyle(
-    		    "-fx-background-color: #FF0000; " +
-    		    "-fx-text-fill: white; " +
-    		    "-fx-font-weight: bold; " +
-    		    "-fx-background-radius: 5;"
-    		);
-	}
+        button.setStyle(
+                "-fx-background-color: #FF0000; " +
+                        "-fx-text-fill: white; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-background-radius: 5;");
+    }
 
-	public void addEdge() {
-        System.out.println("Cargando la vista para agregar arista...");
+    public void addEdge() {
         BorderPane addEdgePane = new BorderPane();
         VBox content = new VBox(10);
         content.setPadding(new Insets(20));
@@ -390,7 +337,7 @@ public class Dashboard {
             if (sourceId.isEmpty() || targetId.isEmpty() || weightText.isEmpty()) {
                 showAlert(Alert.AlertType.ERROR, "Error", "Todos los campos deben ser completados.");
                 return;
-            }else if (sourceId.equalsIgnoreCase(targetId)) {
+            } else if (sourceId.equalsIgnoreCase(targetId)) {
                 showAlert(Alert.AlertType.ERROR, "Error", "No se puede crear una relacion con la misma entidad");
                 return;
             }else if(!graphController.isNodePresentById(sourceId)) {
@@ -423,7 +370,6 @@ public class Dashboard {
     public void removeNode() {
         BorderPane removeNodePane = new BorderPane();
         VBox content = new VBox(10);
-        boolean result = false;
         content.setPadding(new Insets(20));
         content.setAlignment(Pos.CENTER);
         content.setStyle("-fx-background-color: #f0f8ff;");
@@ -444,7 +390,7 @@ public class Dashboard {
                 return;
             }
 
-            GraphController.getInstance().removeNode(nodeId);
+            boolean result = GraphController.getInstance().removeNode(nodeId);
 
             if (result) {
                 showAlert(Alert.AlertType.INFORMATION, "Éxito", "Nodo eliminado correctamente.");
@@ -459,8 +405,6 @@ public class Dashboard {
     }
 
     public void removeEdge() {
-        System.out.println("Cargando la vista para eliminar arista...");
-
         BorderPane removeEdgePane = new BorderPane();
         VBox content = new VBox(10);
         content.setPadding(new Insets(20));
@@ -485,13 +429,13 @@ public class Dashboard {
             if (sourceId.isEmpty() || targetId.isEmpty()) {
                 showAlert(Alert.AlertType.ERROR, "Error", "Todos los campos deben ser completados.");
                 return;
-            }else if (sourceId.equalsIgnoreCase(targetId)) {
+            } else if (sourceId.equalsIgnoreCase(targetId)) {
                 showAlert(Alert.AlertType.ERROR, "Error", "Los ID son los mismos.");
                 return;
-            }else if (!graphController.isNodeIdAlreadyRegistered(sourceId)) {
+            } else if (!graphController.isNodeIdAlreadyRegistered(sourceId)) {
                 showAlert(Alert.AlertType.ERROR, "Error", "El nodo fuente no existe.");
                 return;
-            }else if (!graphController.isNodeIdAlreadyRegistered(targetId)) {
+            } else if (!graphController.isNodeIdAlreadyRegistered(targetId)) {
                 showAlert(Alert.AlertType.ERROR, "Error", "El nodo destino no existe.");
                 return;
             }
@@ -552,8 +496,6 @@ public class Dashboard {
     }
 
     public void updateEdge() {
-        System.out.println("Cargando la vista para actualizar arista...");
-
         BorderPane updateEdgePane = new BorderPane();
         VBox content = new VBox(10);
         content.setPadding(new Insets(20));
@@ -609,76 +551,53 @@ public class Dashboard {
     }
 
     private void centralidad() {
-    VBox centralityMenu = new VBox(10);
-    centralityMenu.setPadding(new Insets(20));
-    centralityMenu.setAlignment(Pos.CENTER);
-    centralityMenu.setStyle("-fx-background-color: #f0f8ff;");
+        VBox centralityMenu = new VBox(10);
+        centralityMenu.setPadding(new Insets(20));
+        centralityMenu.setAlignment(Pos.CENTER);
+        centralityMenu.setStyle("-fx-background-color: #f0f8ff;");
 
-    Label title = new Label("Análisis de Centralidad");
-    title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
+        Label title = new Label("Análisis de Centralidad");
+        title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
 
-    Button degreeCentralityButton = new Button("Centralidad de Grado");
-    Button betweennessCentralityButton = new Button("Centralidad de Intermediación");
-    Button closenessCentralityButton = new Button("Centralidad de Cercanía");
-    styleButton(degreeCentralityButton);
-    styleButton(betweennessCentralityButton);
-    styleButton(closenessCentralityButton);
+        Button degreeCentralityButton = new Button("Centralidad de Grado");
+        Button betweennessCentralityButton = new Button("Centralidad de Intermediación");
+        Button closenessCentralityButton = new Button("Centralidad de Cercanía");
+        styleButton(degreeCentralityButton);
+        styleButton(betweennessCentralityButton);
+        styleButton(closenessCentralityButton);
 
-    TextArea resultsArea = new TextArea();
-    resultsArea.setEditable(false);
-    resultsArea.setPromptText("Resultados se mostrarán aquí...");
+        TextArea resultsArea = new TextArea();
+        resultsArea.setEditable(false);
+        resultsArea.setPromptText("Resultados se mostrarán aquí...");
 
-    degreeCentralityButton.setOnAction(e -> {
-        Map<Node, Integer> degreeResults = graphController.calculateDegreeCentrality();
-        StringBuilder results = new StringBuilder("Centralidad de Grado:\n");
-        degreeResults.forEach((node, degree) ->
-            results.append(node.getName()).append(": ").append(degree).append("\n"));
-        resultsArea.setText(results.toString());
-    });
+        degreeCentralityButton.setOnAction(e -> {
+            Map<Node, Integer> degreeResults = graphController.calculateDegreeCentrality();
+            StringBuilder results = new StringBuilder("Centralidad de Grado:\n");
+            degreeResults
+                    .forEach((node, degree) -> results.append(node.getName()).append(": ").append(degree).append("\n"));
+            resultsArea.setText(results.toString());
+        });
 
-    betweennessCentralityButton.setOnAction(e -> {
-        Map<Node, Double> betweennessResults = graphController.calculateBetweennessCentrality();
-        StringBuilder results = new StringBuilder("Centralidad de Intermediación:\n");
-        betweennessResults.forEach((node, betweenness) ->
-            results.append(node.getName()).append(": ").append(betweenness).append("\n"));
-        resultsArea.setText(results.toString());
-    });
+        betweennessCentralityButton.setOnAction(e -> {
+            Map<Node, Double> betweennessResults = graphController.calculateBetweennessCentrality();
+            StringBuilder results = new StringBuilder("Centralidad de Intermediación:\n");
+            betweennessResults.forEach((node, betweenness) -> results.append(node.getName()).append(": ")
+                    .append(betweenness).append("\n"));
+            resultsArea.setText(results.toString());
+        });
 
-    closenessCentralityButton.setOnAction(e -> {
-        Map<Node, Double> closenessResults = graphController.calculateClosenessCentrality();
-        StringBuilder results = new StringBuilder("Centralidad de Cercanía:\n");
-        closenessResults.forEach((node, closeness) ->
-            results.append(node.getName()).append(": ").append(closeness).append("\n"));
-        resultsArea.setText(results.toString());
-    });
+        closenessCentralityButton.setOnAction(e -> {
+            Map<Node, Double> closenessResults = graphController.calculateClosenessCentrality();
+            StringBuilder results = new StringBuilder("Centralidad de Cercanía:\n");
+            closenessResults.forEach(
+                    (node, closeness) -> results.append(node.getName()).append(": ").append(closeness).append("\n"));
+            resultsArea.setText(results.toString());
+        });
 
-    centralityMenu.getChildren().addAll(title, degreeCentralityButton, betweennessCentralityButton, closenessCentralityButton, resultsArea);
-    principal.setCenter(centralityMenu);
-}
-
-
-    /*
-     * private void comunity() {
-     * List<Set<Node>> communities = graphController.detectCommunities();
-     * Map<Node, Color> nodeColors = new HashMap<>();
-     * Random rand = new Random();
-     *
-     * // Asignar colores únicos a cada comunidad
-     * for (Set<Node> community : communities) {
-     * Color color = Color.rgb(rand.nextInt(256), rand.nextInt(256),
-     * rand.nextInt(256));
-     * for (Node node : community) {
-     * nodeColors.put(node, color);
-     * }
-     * }
-     *
-     * // Crear vista con el grafo de comunidades
-     * GraphView graphView = new GraphView();
-     * graphView.setGraph(graphController.getGraph());
-     *
-     * principal.setCenter(graphView.getGraphCommunity(nodeColors));
-     * }
-     */
+        centralityMenu.getChildren().addAll(title, degreeCentralityButton, betweennessCentralityButton,
+                closenessCentralityButton, resultsArea);
+        principal.setCenter(centralityMenu);
+    }
 
     private void comunity(int option) {
         // Detectar comunidades
@@ -741,10 +660,10 @@ public class Dashboard {
         tableContainer.setAlignment(Pos.CENTER);
         tableContainer.setPadding(new Insets(20));
         tableContainer.setStyle("-fx-background-color: #f0f8ff; -fx-font-size: 16px; -fx-font-weight: bold;");
-        
 
         principal.setCenter(tableContainer);
     }
+
     private void showFrequentProductBundles() {
         Graph graph = graphController.getGraph();
 
@@ -778,6 +697,29 @@ public class Dashboard {
         principal.setCenter(tableContainer);
     }
 
+    private void showReport() {
+        String report = graphController.generateCommunityReport();
+    
+        TextArea textArea = new TextArea(report);
+        textArea.setEditable(false);
+        textArea.setWrapText(true);
+        textArea.setStyle("-fx-font-size: 14px; -fx-background-color: #f0f8ff; -fx-padding: 10;");
+    
+        ScrollPane scrollPane = new ScrollPane(textArea);
+        scrollPane.setFitToWidth(true); 
+        scrollPane.setFitToHeight(true); 
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED); 
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED); 
+    
+        BorderPane reportLayout = new BorderPane();
+        reportLayout.setCenter(scrollPane);
+
+        principal.setCenter(reportLayout);
+
+        BorderPane.setMargin(scrollPane, new Insets(10)); 
+    }
+    
+
     private void showAlert(Alert.AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
@@ -785,6 +727,5 @@ public class Dashboard {
         alert.setContentText(message);
         alert.showAndWait();
     }
-
 
 }

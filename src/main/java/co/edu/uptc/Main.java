@@ -50,7 +50,6 @@ public class Main extends Application {
         graphController.addNode("5", "Cliente4", "cliente");
         graphController.addNode("6", "Cliente5", "cliente");
         graphController.addNode("7", "Cliente6", "cliente");
-        graphController.addEdge("2", "1", 50.0);
         graphController.addEdge("3", "1", 50.0);
         graphController.addEdge("4", "1", 50.0);
         graphController.addEdge("5", "1", 50.0);
