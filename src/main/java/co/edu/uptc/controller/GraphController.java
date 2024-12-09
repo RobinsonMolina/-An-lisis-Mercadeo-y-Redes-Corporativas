@@ -61,12 +61,13 @@ public class GraphController {
         return isNodePresentById(sourceId) && isNodePresentById(targetId);
     }
 
-    private boolean isNodePresentById(String id) {
-        return graph.getNodes().stream().anyMatch(n -> n.getId().equals(id));
-    }
 
     private Node findNodeById(String id) {
         return graph.getNodes().stream().filter(n -> n.getId().equals(id)).findFirst().orElse(null);
+    }
+    
+    public boolean isNodePresentById(String id) {
+        return graph.getNodes().stream().anyMatch(n -> n.getId().equals(id));
     }
 
     // Verificar si un ID de nodo ya está registrado

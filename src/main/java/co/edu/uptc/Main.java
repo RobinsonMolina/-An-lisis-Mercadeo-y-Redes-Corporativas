@@ -34,6 +34,8 @@ public class Main extends Application {
             System.err.println("Error al iniciar la aplicación: " + e.getMessage());
         }
     }
+    
+   
 
     /**
      * Inicializa los nodos y aristas del grafo.
@@ -54,5 +56,7 @@ public class Main extends Application {
         graphController.addEdge("6", "1", 50.0);
         graphController.addEdge("7", "6", 50.0); 
     }
+    
+    
     
 }
