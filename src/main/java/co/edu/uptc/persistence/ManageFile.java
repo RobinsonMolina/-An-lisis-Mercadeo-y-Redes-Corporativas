@@ -19,13 +19,13 @@ public class ManageFile {
         Graph graph = new Graph();
 
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String line = br.readLine(); 
+            String line = br.readLine();
             System.out.println("Encabezado leído: " + line);
 
             while ((line = br.readLine()) != null) {
                 System.out.println("Procesando línea: " + line);
 
-                String[] values = line.split(","); 
+                String[] values = line.split(",");
                 if (values.length >= 4) {
                     try {
                         String source = values[0].trim();
@@ -60,20 +60,18 @@ public class ManageFile {
         return graph;
     }
 
-
-    
     public void saveGraphToCSV(Graph graph, String filePath) {
         try (FileWriter writer = new FileWriter(filePath)) {
-            writer.append("Origen,Destino,Tipo,Peso\n");
-
+            // Escribe la cabecera
+            writer.append("Origen,Destino,Peso,Estado\n");
+            // Escribe las aristas
             for (Edge edge : graph.getEdges()) {
                 String source = edge.getSource().getId();
                 String target = edge.getTarget().getId();
-                String type = edge.getSource().getType(); 
                 double weight = edge.getWeight();
-                writer.append(String.format("%s,%s,%s,%.2f\n", source, target, type, weight));
+                String status = edge.isDeleted() ? "Eliminado" : "Persistente";
+                writer.append(String.format("%s,%s,%.2f,%s\n", source, target, weight, status));
             }
-
             System.out.println("Grafo guardado exitosamente en " + filePath);
         } catch (IOException e) {
             System.out.println("Error al guardar el archivo CSV: " + e.getMessage());
