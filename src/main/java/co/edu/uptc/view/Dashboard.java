@@ -2,6 +2,7 @@ package co.edu.uptc.view;
 
 import co.edu.uptc.controller.GraphController;
 import co.edu.uptc.controller.SimilarityController;
+import co.edu.uptc.model.TableRowData;
 import co.edu.uptc.model.entities.Graph;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -9,7 +10,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -65,8 +65,8 @@ public class Dashboard {
         Button loadGraphButton = createStyledButton("Cargar grafo");
         Button centralidadButton = createStyledButton("Centralidad");
         Button comunityButton = createStyledButton("Comunidades");
-        Button saleButton = new Button("Competidores");
-        Button productBundleButton = new Button("Paquetes de Productos Frecuentes");
+        Button saleButton = createStyledButton("Similitud de Empresas");
+        Button productBundleButton = createStyledButton("Similitud de Productos");
 
 
         createGraphButton.setOnAction(e -> showCreateGraphMenu());
@@ -193,7 +193,7 @@ public class Dashboard {
         System.out.println("viewGraph");
         BorderPane root = new BorderPane();
         if (graphController.getGraph() != null && !graphController.getGraph().getNodes().isEmpty()) {
-            GraphView graphView = new GraphView();
+            GraphView graphView = new GraphView(graphController.getGraph());
             GraphController.getInstance().getGraph();
             principal.setCenter(graphView.getGraphContainer());
         } else {
@@ -600,7 +600,6 @@ public class Dashboard {
         SimilarityController analysis = new SimilarityController();
         Map<Node, List<Node>> similarEntities = analysis.findSimilarEntities(graph);
 
-        // Crear la tabla
         TableView<TableRowData> tableView = new TableView<>();
         TableColumn<TableRowData, String> entityColumn = new TableColumn<>("Entidad");
         TableColumn<TableRowData, String> similarColumn = new TableColumn<>("Entidades Similares");
@@ -610,7 +609,6 @@ public class Dashboard {
 
         tableView.getColumns().addAll(entityColumn, similarColumn);
 
-        // Rellenar datos
         ObservableList<TableRowData> rows = FXCollections.observableArrayList();
         for (Map.Entry<Node, List<Node>> entry : similarEntities.entrySet()) {
             String entity = entry.getKey().getName();
@@ -620,7 +618,6 @@ public class Dashboard {
 
         tableView.setItems(rows);
 
-        // Configurar layout
         VBox tableContainer = new VBox(10, new Label("Similitud de Entidades"), tableView);
         tableContainer.setAlignment(Pos.CENTER);
         tableContainer.setPadding(new Insets(20));
@@ -636,16 +633,14 @@ public class Dashboard {
         }
 
         SimilarityController analysis = new SimilarityController();
-        List<List<Node>> bundles = analysis.findFrequentProductBundles(graph, 50.0); // Umbral ajustable
+        List<List<Node>> bundles = analysis.findFrequentProductBundles(graph, 20.0);
 
-        // Crear la tabla
         TableView<TableRowData> tableView = new TableView<>();
         TableColumn<TableRowData, String> bundleColumn = new TableColumn<>("Productos Frecuentes");
 
         bundleColumn.setCellValueFactory(data -> data.getValue().bundleProperty());
         tableView.getColumns().add(bundleColumn);
 
-        // Rellenar datos
         ObservableList<TableRowData> rows = FXCollections.observableArrayList();
         for (List<Node> bundle : bundles) {
             String products = bundle.stream().map(Node::getName).reduce("", (a, b) -> a + ", " + b);
@@ -654,7 +649,6 @@ public class Dashboard {
 
         tableView.setItems(rows);
 
-        // Configurar layout
         VBox tableContainer = new VBox(10, new Label("Paquetes de Productos Frecuentes"), tableView);
         tableContainer.setAlignment(Pos.CENTER);
         tableContainer.setPadding(new Insets(20));
