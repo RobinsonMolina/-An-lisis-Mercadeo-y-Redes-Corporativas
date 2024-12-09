@@ -45,6 +45,7 @@ public class GraphController {
     public void addNode(String id, String name, String type) {
         Node node = new Node(id, name, type);
         graph.addNode(node);
+        saveGraph();
     }
 
     // Método para agregar una arista
@@ -54,6 +55,7 @@ public class GraphController {
 
         if (source != null && target != null) {
             graph.addEdge(source, target, weight);
+            saveGraph();
         } else {
             System.out.println("Error: Nodo fuente o destino no encontrado.");
         }
@@ -61,6 +63,10 @@ public class GraphController {
 
     private Node findNodeById(String id) {
         return graph.getNodes().stream().filter(n -> n.getId().equals(id)).findFirst().orElse(null);
+    }
+    
+    public boolean isNodePresentById(String id) {
+        return graph.getNodes().stream().anyMatch(n -> n.getId().equals(id));
     }
 
 
@@ -82,6 +88,7 @@ public class GraphController {
         Node node = findNodeById(id);
         if (node != null) {
             graph.removeNode(node);
+            saveGraph();
         } else {
             System.out.println("Error: Nodo no encontrado.");
         }

@@ -393,13 +393,19 @@ public class Dashboard {
             }else if (sourceId.equalsIgnoreCase(targetId)) {
                 showAlert(Alert.AlertType.ERROR, "Error", "No se puede crear una relacion con la misma entidad");
                 return;
+            }else if(!graphController.isNodePresentById(sourceId)) {
+            	showAlert(Alert.AlertType.ERROR, "Error", "El ID del nodo fuente no se encuentra registrado.");
+            	return;
+            }else if(!graphController.isNodePresentById(weightText)) {
+            	showAlert(Alert.AlertType.ERROR, "Error", "El ID del nodo destino no se encuentra registrado.");
+            	return;
             }
 
             double weight;
             try {
                 weight = Double.parseDouble(weightText);
                 if (weight <= 0) {
-                    showAlert(Alert.AlertType.ERROR, "Error", "El peso no puede ser negativo.");
+                    showAlert(Alert.AlertType.ERROR, "Error", "El peso debe ser un numero positivo");
                     return;
                 }
                 graphController.addEdge(sourceId, targetId, weight);

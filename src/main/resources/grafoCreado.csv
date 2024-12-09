@@ -1,9 +1,9 @@
 Origen,Destino,Tipo,Peso
-3,1,cliente,50,00
-6,1,cliente,50,00
-2,1,cliente,50,00
-2,1,cliente,50,00
 5,1,cliente,50,00
+6,1,cliente,50,00
 1,2,empresa,100,00
+11,111,11,111111,00
 7,6,cliente,50,00
 4,1,cliente,50,00
+3,1,cliente,50,00
+2,1,cliente,50,00
