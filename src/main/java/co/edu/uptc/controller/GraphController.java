@@ -6,7 +6,7 @@ import co.edu.uptc.persistence.ManageFile;
 
 public class GraphController {
 
-    private static GraphController instance; // Single instance of the class
+    private static GraphController instance; 
     private Graph graph;
     private ManageFile manageFile;
 
@@ -25,6 +25,11 @@ public class GraphController {
     private void saveGraph() {
         String resourcePath = "src/main/resources/grafoCreado.csv"; 
         manageFile.saveGraphToCSV(graph, resourcePath);
+    }
+
+    
+    public void loadGraphFromCSV(String filePath) {
+        this.graph = manageFile.loadGraphFromCSV(filePath);
     }
 
     public void addNode(String id, String name, String type) {
@@ -77,9 +82,7 @@ public class GraphController {
     
    
 
-    public void loadGraphFromCSV(String filePath) {
-        this.graph = manageFile.loadGraphFromCSV(filePath);
-    }
+    
 
     public boolean removeNode(String nodeId) {
         Node node = findNodeById(nodeId);
