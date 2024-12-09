@@ -36,9 +36,7 @@ public class Dashboard {
     private GraphController graphController;
     private VBox option;
     private VBox menu;
-    private HBox hIcon;
     private VBox communityOptions;
-    private BorderPane root;
     private BorderPane principal;
     private Button comunityButton;
 
@@ -50,9 +48,7 @@ public class Dashboard {
         principal = new BorderPane();
         menu = new VBox();
         option = new VBox(10);
-        hIcon = new HBox();
         communityOptions = new VBox();
-        root = new BorderPane();
 
         createMenu();
         //createMenuToggleButton();
@@ -148,24 +144,6 @@ public class Dashboard {
         return button;
     }
 
-    /*private HBox createMenuToggleButton() {
-        hIcon.setPadding(new Insets(5));
-        hIcon.setAlignment(Pos.CENTER_LEFT);
-        hIcon.setStyle("-fx-background-color: #f0f8ff;");
-
-        // ImageView menuIcon = new
-        // ImageView(getClass().getResource("/Icon.png").toExternalForm());
-        ImageView menuIcon = new ImageView(getClass().getResource("/Icon.png").toExternalForm());
-
-        menuIcon.setFitWidth(24);
-        menuIcon.setFitHeight(24);
-
-        menuIcon.setOnMouseClicked(e -> option.setVisible(!option.isVisible()));
-
-        hIcon.getChildren().add(menuIcon);
-        return hIcon;
-    }*/
-
     private void toggleCommunityOptions() {
         boolean isVisible = communityOptions.isVisible();
         communityOptions.setVisible(!isVisible);
@@ -173,7 +151,6 @@ public class Dashboard {
     }
 
     private void showCreateGraphMenu() {
-        BorderPane root = new BorderPane();
         VBox createGraphArea = new VBox(10);
         createGraphArea.setPadding(new Insets(20));
         createGraphArea.setAlignment(Pos.CENTER);
@@ -224,8 +201,6 @@ public class Dashboard {
     }
 
     private void viewGraph() {
-        System.out.println("viewGraph");
-        BorderPane root = new BorderPane();
         if (graphController.getGraph() != null && !graphController.getGraph().getNodes().isEmpty()) {
             GraphView graphView = new GraphView(graphController.getGraph());
             graphView.getGraphContainer().setStyle("-fx-background-color: #f0f8ff;");
@@ -243,7 +218,6 @@ public class Dashboard {
     }
 
     private void loadGraph() {
-        System.out.println("Entro al método");
         BorderPane root = new BorderPane();
         Label loadGraphLabel = new Label("Cargar Grafo");
         loadGraphLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
@@ -276,7 +250,6 @@ public class Dashboard {
     }
 
     public void addNode() {
-        System.out.println("Cargando la vista para agregar nodo...");
         BorderPane addNodePane = new BorderPane();
         VBox content = new VBox(10);
         content.setPadding(new Insets(20));
@@ -336,7 +309,6 @@ public class Dashboard {
     }
 
     public void addEdge() {
-        System.out.println("Cargando la vista para agregar arista...");
         BorderPane addEdgePane = new BorderPane();
         VBox content = new VBox(10);
         content.setPadding(new Insets(20));
@@ -422,8 +394,6 @@ public class Dashboard {
     }
 
     public void removeEdge() {
-        System.out.println("Cargando la vista para eliminar arista...");
-
         BorderPane removeEdgePane = new BorderPane();
         VBox content = new VBox(10);
         content.setPadding(new Insets(20));
@@ -515,8 +485,6 @@ public class Dashboard {
     }
 
     public void updateEdge() {
-        System.out.println("Cargando la vista para actualizar arista...");
-
         BorderPane updateEdgePane = new BorderPane();
         VBox content = new VBox(10);
         content.setPadding(new Insets(20));
@@ -716,31 +684,25 @@ public class Dashboard {
     }
 
     private void showReport() {
-        // Obtener el informe generado por el controlador
         String report = graphController.generateCommunityReport();
     
-        // Crear un TextArea para mostrar el informe
         TextArea textArea = new TextArea(report);
-        textArea.setEditable(false); // Hacer que el texto no sea editable
-        textArea.setWrapText(true); // Ajustar el texto automáticamente a nuevas líneas
+        textArea.setEditable(false);
+        textArea.setWrapText(true);
         textArea.setStyle("-fx-font-size: 14px; -fx-background-color: #f0f8ff; -fx-padding: 10;");
     
-        // Colocar el TextArea dentro de un ScrollPane para permitir desplazamiento
         ScrollPane scrollPane = new ScrollPane(textArea);
-        scrollPane.setFitToWidth(true); // Ajustar el ancho al tamaño de la ventana
-        scrollPane.setFitToHeight(true); // Ajustar la altura al tamaño de la ventana
-        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED); // Mostrar barra vertical solo si es necesario
-        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED); // Mostrar barra horizontal solo si es necesario
+        scrollPane.setFitToWidth(true); 
+        scrollPane.setFitToHeight(true); 
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED); 
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED); 
     
-        // Crear una nueva escena o layout para mostrar el informe
         BorderPane reportLayout = new BorderPane();
         reportLayout.setCenter(scrollPane);
-    
-        // Establecer el nuevo layout como el centro de la vista principal
+
         principal.setCenter(reportLayout);
-    
-        // Asegúrate de que el layout se ajuste al tamaño disponible
-        BorderPane.setMargin(scrollPane, new Insets(10)); // Agregar margen si lo deseas
+
+        BorderPane.setMargin(scrollPane, new Insets(10)); 
     }
     
 

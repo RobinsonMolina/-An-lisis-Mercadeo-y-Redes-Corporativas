@@ -260,10 +260,8 @@ public class GraphController {
     public String generateCommunityReport() {
         StringBuilder report = new StringBuilder();
 
-        // Obtener las comunidades detectadas en el grafo
         List<Set<Node>> communities = detectCommunities();
 
-        // Variables para el cálculo
         double maxCommunitySales = 0;
         double minCommunitySales = Double.MAX_VALUE;
         double maxSales = 0;
@@ -274,15 +272,13 @@ public class GraphController {
         String mostSalesCompany = "";
         String leastSalesCompany = "";
 
-        // Analizamos cada comunidad
+
         for (Set<Node> community : communities) {
-            double totalCommunitySales = 0; // Definimos esta variable dentro del ciclo de comunidad
+            double totalCommunitySales = 0; 
             String communityName = "Comunidad " + communities.indexOf(community);
 
-            // Analizamos los nodos (empresas) de cada comunidad
             for (Node node : community) {
-                double companySales = getCompanySales(node); // Ventas de la comunidad (sumando los pesos de las
-                                                             // aristas)
+                double companySales = getCompanySales(node); 
                 totalCommunitySales += companySales;
                 String companyName = node.getName();
 
@@ -312,7 +308,6 @@ public class GraphController {
             }
         }
 
-        // Construir el informe final
         report.append("\n                                                              Informe\n\n");
 
         // Comunidades
@@ -341,7 +336,6 @@ public class GraphController {
         return report.toString();
     }
 
-    // Método para obtener un análisis aleatorio
     private String getRandomAnalysis(String mostSalesCommunity, double maxCommunitySales, String leastSalesCommunity,
             double minCommunitySales, String mostSalesCompany, double maxSales, String leastSalesCompany,
             double minSales) {
@@ -386,15 +380,12 @@ public class GraphController {
                         + minSales
                         + ") enfrenta dificultades que podrían ser resueltas con un cambio en sus tácticas de ventas o en su estrategia de producto."
         };
-
-        // Obtener un análisis aleatorio
         Random rand = new Random();
         int randomIndex = rand.nextInt(analysis.length);
 
         return analysis[randomIndex] + "\n\n";
     }
 
-    // Método para obtener una recomendación aleatoria
     private String getRandomRecommendation() {
         String[] recommendations = {
                 "Recomendación: Enfoque en la comunidad con menos ventas. Investigar las razones detrás de sus bajas ventas y mejorar la estrategia de marketing en esa comunidad.",
@@ -404,23 +395,18 @@ public class GraphController {
                 "Recomendación: Se sugiere realizar promociones para las comunidades con menos ventas, con el fin de aumentar la visibilidad y el interés en los productos que ofrecen."
         };
 
-        // Obtener una recomendación aleatoria
         Random rand = new Random();
         int randomIndex = rand.nextInt(recommendations.length);
 
         return recommendations[randomIndex];
     }
 
-    // Método para obtener las ventas de una empresa sumando los pesos de las
-    // aristas
     private double getCompanySales(Node node) {
         double totalSales = 0;
 
-        // Sumamos los pesos de las aristas (ventas) relacionadas con el nodo
         for (Edge edge : graph.getEdgesFromNode(node)) {
-            totalSales += edge.getWeight(); // El peso de la arista representa las ventas
+            totalSales += edge.getWeight();
         }
-
         return totalSales;
     }
 
